@@ -15,8 +15,8 @@ from rest_framework.viewsets import ModelViewSet
 from terra_utils.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
-from terracommon.accounts.permissions import GroupAdminPermission
-from terracommon.events.signals import event
+from .permissions import GroupAdminPermission
+#from terracommon.events.signals import event
 
 from .forms import PasswordSetAndResetForm
 from .serializers import (GroupSerializer, PasswordChangeSerializer,
@@ -70,12 +70,12 @@ class UserRegisterView(APIView):
                 form.save(**opts)
 
                 serializer = TerraUserSerializer(user)
-                event.send(
-                    self.__class__,
-                    action="USER_CREATED",
-                    user=user,
-                    instance=user
-                )
+                # event.send(
+                #     self.__class__,
+                #     action="USER_CREATED",
+                #     user=user,
+                #     instance=user
+                # )
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data=form.errors,
@@ -137,7 +137,7 @@ class UserViewSet(ModelViewSet):
                      'is_active', 'is_staff', 'date_joined')
 
     def get_queryset(self):
-        if self.request.user.has_perm('accounts.can_manage_users'):
+        if self.request.user.has_perm('terra_accounts.can_manage_users'):
             return UserModel.objects.all()
 
         return self.queryset

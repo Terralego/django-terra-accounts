@@ -1,33 +1,30 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
-
-from terracommon.trrequests.tests.mixins import TestPermissionsMixin
+from rest_framework.permissions import BasePermission
+from rest_framework.test import APIClient, APITestCase
 
 from .factories import TerraUserFactory
 
 UserModel = get_user_model()
 
 
-class UserViewsetTestCase(TestCase, TestPermissionsMixin):
+class UserViewsetTestCase(APITestCase):
     def setUp(self):
-        self.client = APIClient()
-
         self.group = Group.objects.create(name='test group')
-
         self.user = TerraUserFactory()
         self.user.groups.add(self.group)
 
         self.client.force_authenticate(user=self.user)
-
-        self._set_permissions(['can_manage_groups', ])
+        self.user.user_permissions.add(
+            *Permission.objects.filter(codename__in=['can_manage_groups', ])
+        )
 
     def test_group_detail(self):
         response = self.client.get(
-            reverse('accounts:group-detail', args=[self.group.pk])
+            reverse('terra_accounts:group-detail', args=[self.group.pk])
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         # The user must be in the group
@@ -40,7 +37,7 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
             "name": "test group 3"
         }
         response = self.client.post(
-            reverse('accounts:group-list'),
+            reverse('terra_accounts:group-list'),
             data,
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -55,7 +52,7 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
             "users": [self.user.id],
         }
         response = self.client.post(
-            reverse('accounts:group-list'),
+            reverse('terra_accounts:group-list'),
             data,
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -64,13 +61,13 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
         self.assertIn(self.user.id, Group.objects.get(name=data["name"]).user_set.values_list('id', flat=True))
 
     def test_only_terrauser_can_create_group(self):
-        self._clean_permissions()
+        self.user.user_permissions.clear()
         data = {
             "name": "test group 2",
             "users": [self.user.id],
         }
         response = self.client.post(
-            reverse('accounts:group-list'),
+            reverse('terra_accounts:group-list'),
             data,
         )
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
@@ -80,7 +77,7 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
             "name": "new group name"
         }
         response = self.client.patch(
-            reverse('accounts:group-detail', args=[self.group.pk]),
+            reverse('terra_accounts:group-detail', args=[self.group.pk]),
             data,
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -97,7 +94,7 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
             "users": [new_user.id],
         }
         response = self.client.patch(
-            reverse('accounts:group-detail', args=[self.group.pk]),
+            reverse('terra_accounts:group-detail', args=[self.group.pk]),
             data,
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -117,7 +114,7 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
             "users": [new_user.id],
         }
         response = self.client.put(
-            reverse('accounts:group-detail', args=[self.group.pk]),
+            reverse('terra_accounts:group-detail', args=[self.group.pk]),
             data,
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -132,7 +129,7 @@ class UserViewsetTestCase(TestCase, TestPermissionsMixin):
 
     def test_delete_group(self):
         response = self.client.delete(
-            reverse('accounts:group-detail', args=[self.group.pk])
+            reverse('terra_accounts:group-detail', args=[self.group.pk])
         )
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(0, Group.objects.count())

@@ -7,7 +7,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0004_auto_20181120_1059'),
+        ('terra_accounts', '0004_auto_20181120_1059'),
     ]
 
     operations = [

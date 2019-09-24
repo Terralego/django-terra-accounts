@@ -7,7 +7,7 @@ from .views import (GroupViewSet, UserChangePasswordView, UserInformationsView,
                     UserProfileView, UserRegisterView, UserSetPasswordView,
                     UserViewSet)
 
-app_name = 'accounts'
+app_name = 'terra_accounts'
 
 router = routers.SimpleRouter()
 router.register(r'user', UserViewSet, base_name='user')
