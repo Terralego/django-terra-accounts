@@ -8,24 +8,15 @@ python:
 
 env:
   matrix:
-  - DJANGO_VERSION=2.1 REST_VERSION=3.8
   - DJANGO_VERSION=2.2 REST_VERSION=3.8
-  - DJANGO_VERSION=2.1 REST_VERSION=3.9
   - DJANGO_VERSION=2.2 REST_VERSION=3.9
-  - DJANGO_VERSION=2.1 REST_VERSION=3.10
   - DJANGO_VERSION=2.2 REST_VERSION=3.10
-  - DJANGO_VERSION=2.1 REST_VERSION=dev
-  - DJANGO_VERSION=2.2 REST_VERSION=dev
 
 services:
   - postgresql
 
 addons:
   postgresql: "10"
-  apt:
-    packages:
-      - postgresql-10-postgis-2.4
-      - postgresql-10-pgrouting
 
 stages:
   - lint
@@ -41,11 +32,6 @@ install:
     else
     pip install Django==$DJANGO_VERSION -U;
     fi
-  - if [[ $REST_VERSION == dev ]]; then
-    pip install -e git+https://github.com/encode/django-rest-framework.git@master#egg=django-rest-framework;
-    else
-    pip install djangorestframework==$REST_VERSION -U;
-    fi
 
 
 before_script:
@@ -53,8 +39,6 @@ before_script:
   # allow database creation for test
   - psql -c "ALTER USER travis_ci_test WITH SUPERUSER;" -U postgres
   - psql -c 'CREATE DATABASE travis_ci_test WITH OWNER travis_ci_test;' -U postgres
-  - psql -d travis_ci_test -c 'CREATE EXTENSION postgis;'
-  - psql -d travis_ci_test -c 'CREATE EXTENSION pgrouting;'
 
 after_failure:
   - pip freeze
