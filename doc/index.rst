@@ -15,3 +15,5 @@ Django accounts management for terralego apps
 .. image:: https://travis-ci.org/Terralego/django-terra-accounts.svg?branch=masterango-geostore.svg?branch=master
     :target: https://travis-ci.org/Terralego/django-terra-accounts
 
+.. image:: https://codecov.io/gh/Terralego/django-terra-accounts/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/Terralego/django-terra-accounts
