@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'test_terra_accounts.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'USER': 'travis_ci_test',
-        'NAME': 'travis_ci_test',
-        'PASSWORD': 'travis_ci_test',
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': os.getenv('POSTGRES_USER', 'travis_ci_test'),
+        'NAME': os.getenv('POSTGRES_DB', 'travis_ci_test'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'travis_ci_test'),
         'HOST': os.getenv('POSTGRES_HOST', '127.0.0.1')
     }
 }
