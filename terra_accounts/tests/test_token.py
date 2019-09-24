@@ -1,23 +1,21 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
 
-from terracommon.accounts.tests.factories import TerraUserFactory
+from terra_accounts.tests.factories import TerraUserFactory
 
 UserModel = get_user_model()
 
 
-class AuthenticationTestCase(TestCase):
+class AuthenticationTestCase(APITestCase):
     USER_PASSWORD = '123456'
 
     def setUp(self):
-        self.client = APIClient()
         self.user = TerraUserFactory.create(password=self.USER_PASSWORD)
 
     def test_authentication_jwt(self):
         """Feature with valid properties is successfully POSTed"""
-        response = self.client.post(reverse('accounts:token-obtain'),
+        response = self.client.post(reverse('terra_accounts:token-obtain'),
                                     {
                                         'email': self.user.email,
                                         'password': self.USER_PASSWORD
@@ -28,7 +26,7 @@ class AuthenticationTestCase(TestCase):
 
         token = response.data.get('token', False)
 
-        response = self.client.post(reverse('accounts:token-verify'),
+        response = self.client.post(reverse('terra_accounts:token-verify'),
                                     {
                                         'token': token,
                                     },)
@@ -37,7 +35,7 @@ class AuthenticationTestCase(TestCase):
         self.assertEqual(token, response.data.get('token'))
 
     def test_fail_authentication(self):
-        response = self.client.post(reverse('accounts:token-obtain'),
+        response = self.client.post(reverse('terra_accounts:token-obtain'),
                                     {
                                         'email': 'invalid@user.com',
                                         'password': self.USER_PASSWORD

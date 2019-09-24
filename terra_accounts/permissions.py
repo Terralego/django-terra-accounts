@@ -36,4 +36,4 @@ class IsPostOrToken(TokenBasedPermission, IsAuthenticatedPost):
 
 class GroupAdminPermission(BasePermission):
     def has_permission(self, request, view):
-        return request.user.has_perm('accounts.can_manage_groups')
+        return request.user.has_perm('terra_accounts.can_manage_groups')
