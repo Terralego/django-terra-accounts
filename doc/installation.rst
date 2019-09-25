@@ -6,15 +6,11 @@ Requirements
 
 Minimum configuration :
  * Postgresql 10
- * PostGIS 2.4
- * PgRouting 2.5
 
 Recommended configuration :
  * Postgresql 11
- * PostGIS 2.5
- * PgRouting 2.6
 
-Your final django project should use django.contrib.gis.backend.postgis as default DATABASE backend
+Your final django project should use postgresql or postgis as default DATABASE backend
 
 
 USING docker image :
@@ -31,7 +27,7 @@ From Pypi:
 
 ::
 
-    pip install xxxxxxxxxx-xxxxxxxxxxxx
+    pip install django-terra-accounts
 
 From Github:
 
