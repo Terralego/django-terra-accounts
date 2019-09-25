@@ -1,13 +1,13 @@
 import importlib
-import uuid
 
+import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.gis.db import models
 from django.contrib.postgres.fields import JSONField
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
