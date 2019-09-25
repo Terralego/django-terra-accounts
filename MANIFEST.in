@@ -1,5 +1,7 @@
 include *.md
 recursive-include terra_accounts *.md
 recursive-include terra_accounts *.py
+recursive-include terra_accounts/static *
+recursive-include terra_accounts/templates *
 recursive-exclude test_terra_accounts *
 recursive-exclude terra_accounts/tests/ *
