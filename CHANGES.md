@@ -2,12 +2,12 @@
 CHANGELOG
 =========
 
-0.3.0      (2019-09-24)
+0.3.0      (2019-09-25)
 -----------------------
 
 ### Breaking Changes
 
-* App name move from accountds to terra_accounts. Structure is the same, so backup and restore your data
+* App name move from accounts to terra_accounts. Structure is the same, so backup and restore your data
 
 First public tag
 
