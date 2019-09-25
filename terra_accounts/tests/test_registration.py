@@ -1,5 +1,4 @@
 import json
-from unittest.mock import MagicMock
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -11,35 +10,19 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 
-from ..views import UserRegisterView
-#from terracommon.events.signals import event
-
 from .factories import TerraUserFactory
 
 
 class RegistrationTestCase(TestCase):
 
-    @override_settings(
-        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
     def test_registration_view(self):
         # Testing with good email
-        handler = MagicMock()
-        #event.connect(handler)
-
         response = self.client.post(
             reverse('terra_accounts:register'),
             {
                 'email': 'toto@terra.com',
             })
-
-        user = get_user_model().objects.get(email='toto@terra.com')
-        # handler.assert_called_once_with(
-        #     signal=event,
-        #     action='USER_CREATED',
-        #     sender=UserRegisterView,
-        #     user=user,
-        #     instance=user
-        # )
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(1, len(mail.outbox))
@@ -121,10 +104,7 @@ class RegistrationTestCase(TestCase):
             }
         )
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-            )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEqual({}, response.json())
         self.assertEqual(

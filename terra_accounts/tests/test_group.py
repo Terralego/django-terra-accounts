@@ -1,10 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.permissions import BasePermission
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APITestCase
 
 from .factories import TerraUserFactory
 
