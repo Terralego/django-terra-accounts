@@ -128,8 +128,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 SWAGGER_ENABLED = False
 
-# set required DRF settings
 AUTH_USER_MODEL = 'terra_accounts.TerraUser'
+
+# set required DRF settings
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PAGINATION_CLASS':
@@ -153,7 +154,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
-
 
 # JWT configuration
 # http://getblimp.github.io/django-rest-framework-jwt/
