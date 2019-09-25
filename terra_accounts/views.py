@@ -15,10 +15,8 @@ from rest_framework.viewsets import ModelViewSet
 from terra_utils.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
-from .permissions import GroupAdminPermission
-#from terracommon.events.signals import event
-
 from .forms import PasswordSetAndResetForm
+from .permissions import GroupAdminPermission
 from .serializers import (GroupSerializer, PasswordChangeSerializer,
                           PasswordResetSerializer, TerraUserSerializer,
                           UserProfileSerializer)
@@ -70,12 +68,15 @@ class UserRegisterView(APIView):
                 form.save(**opts)
 
                 serializer = TerraUserSerializer(user)
-                # event.send(
-                #     self.__class__,
-                #     action="USER_CREATED",
-                #     user=user,
-                #     instance=user
-                # )
+
+                if 'terracommon.events' in settings.INSTALLED_APPS:
+                    from terracommon.events.signals import event
+                    event.send(
+                        self.__class__,
+                        action="USER_CREATED",
+                        user=user,
+                        instance=user
+                    )
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data=form.errors,
