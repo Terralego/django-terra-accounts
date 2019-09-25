@@ -6,5 +6,7 @@
 
 Django accounts management for terralego apps
 
+https://django-terra-accounts.readthedocs.io/
+
 ## Requirements
 
