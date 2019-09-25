@@ -37,13 +37,13 @@ From Github:
 
 ::
 
-    pip install -e https://github.com/Terralego/django-geostore.git@master#egg=geostore
+    pip install -e https://github.com/Terralego/django-terra-accounts.git@master#egg=django-terra-accounts
 
 With git
 --------
 
 ::
 
-    git clone https://github.com/Terralego/django-geostore.git
-    cd django-geostore
+    git clone https://github.com/Terralego/django-terra-accounts.git
+    cd django-terra-accounts
     python setup.py install

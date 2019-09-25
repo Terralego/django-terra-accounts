@@ -12,8 +12,7 @@ In your project :
         'django.contrib.gis',  # assume contrib.gis is installed
         ...
         'rest_framework',
-        'rest_framework_gis',
-        'geostore',
+        'terra_accounts',
         ...
     ]
 
@@ -34,11 +33,11 @@ In your project :
 
     urlpatterns = [
         ...
-        path('', include('geostore.urls', namespace='geostore')),
+        path('', include('terra_accounts.urls', namespace='terra_accounts')),
         ...
     ]
 
-You can customize default url and namespace by including geostore.views directly
+You can customize default url and namespace by including terra_accounts.views directly
 
 
 # ADMIN :
