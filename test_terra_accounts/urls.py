@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('terra_utils.urls', namespace='terra_utils')),
     path('api/', include('terra_accounts.urls', namespace='terra_accounts')),
 ]
