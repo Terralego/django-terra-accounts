@@ -39,8 +39,8 @@ class UserRegisterView(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request):
+        form = PasswordSetAndResetForm(data=request.data)
         try:
-            form = PasswordSetAndResetForm(data=request.data)
             if form.is_valid():
                 opts = {
                     'token_generator': default_token_generator,
