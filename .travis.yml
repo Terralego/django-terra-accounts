@@ -11,6 +11,7 @@ env:
   - DJANGO_VERSION=2.2 REST_VERSION=3.8
   - DJANGO_VERSION=2.2 REST_VERSION=3.9
   - DJANGO_VERSION=2.2 REST_VERSION=3.10
+  - DJANGO_VERSION=3.0a1 REST_VERSION=3.10
 
 services:
   - postgresql
@@ -53,7 +54,7 @@ jobs:
       install:
         - pip install flake8
       script:
-        - flake8 geostore
+        - flake8 terra_accounts
 
     - stage: deploy
       install: skip

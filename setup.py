@@ -20,7 +20,7 @@ setup(
     description_content_type="text/markdown",
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    url='https://github.com/Terralego/django-geostore.git',
+    url='https://github.com/Terralego/django-terra-accounts.git',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -35,7 +35,7 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     install_requires=[
-        'django>=2.1,<3.0',  # wait for restframework-gis, 0.14 doesnt support django 3.0
+        'django>=2.2,<3.1',
         'psycopg2>=2.7',  # postgres is required to use JSONField
         'django-terra-utils>=0.3.5',
         'djangorestframework>=3.8',
