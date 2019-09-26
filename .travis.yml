@@ -1,69 +1,55 @@
 dist: bionic
 sudo: required
 language: python
-
 python:
 - '3.6'
 - '3.7'
-
 env:
   matrix:
   - DJANGO_VERSION=2.2 REST_VERSION=3.8
   - DJANGO_VERSION=2.2 REST_VERSION=3.9
   - DJANGO_VERSION=2.2 REST_VERSION=3.10
   - DJANGO_VERSION=3.0a1 REST_VERSION=3.10
-
 services:
-  - postgresql
-
+- postgresql
 addons:
-  postgresql: "10"
-
+  postgresql: '10'
 stages:
-  - lint
-  - test
-  - deploy
-
+- lint
+- test
+- deploy
 install:
-  - pip install -e .[dev]
-  - pip install coverage codecov
-  - if [[ $DJANGO_VERSION == dev ]]; then
-    pip install -e git+https://github.com/django/django@master#egg=django;
-    else
-    pip install Django==$DJANGO_VERSION -U;
-    fi
-
-
+- pip install -e .[dev]
+- pip install coverage codecov
+- if [[ $DJANGO_VERSION == dev ]]; then pip install -e git+https://github.com/django/django@master#egg=django;
+  else pip install Django==$DJANGO_VERSION -U; fi
 before_script:
-  - psql -c "CREATE USER travis_ci_test WITH ENCRYPTED PASSWORD 'travis_ci_test';" -U postgres
-  # allow database creation for test
-  - psql -c "ALTER USER travis_ci_test WITH SUPERUSER;" -U postgres
-  - psql -c 'CREATE DATABASE travis_ci_test WITH OWNER travis_ci_test;' -U postgres
-
+- psql -c "CREATE USER travis_ci_test WITH ENCRYPTED PASSWORD 'travis_ci_test';" -U
+  postgres
+- psql -c "ALTER USER travis_ci_test WITH SUPERUSER;" -U postgres
+- psql -c 'CREATE DATABASE travis_ci_test WITH OWNER travis_ci_test;' -U postgres
 after_failure:
-  - pip freeze
-
+- pip freeze
 script:
-  - coverage run ./manage.py test
-  - codecov
-
+- coverage run ./manage.py test
+- codecov
 jobs:
   include:
-    - stage: lint
-      install:
-        - pip install flake8
-      script:
-        - flake8 terra_accounts
+  - stage: lint
+    install:
+    - pip install flake8
+    script:
+    - flake8 terra_accounts
+  - stage: deploy
+    install: skip
+    before_script: skip
+    script: skip
+    deploy:
+      stage: deploy
+      provider: pypi
+      user: "$PYPI_USER"
+      password:
+        secure: Vew95Uui2gDnG9RnkA0l0qoaPEs/D507BjgKq3OKtJJP+wp65V8WHvrPgaRVgXhRSgF2MDC/ytl+/OUJNgyfbp1PAlIuB8QcoghWF3sIWFnNFR5X/xlY2QgrWrPAt779h+ofmgW9WBKF4TOxJCw6HjAsBDgTZ4DSC6HkJuVmB4lJ2pX2PBtzS8Q1CQxfGVdA+ya89MIXeIfLfX9+P6OYcQAlk9a9nr77cwcxJSl2ZHdGZvUE/d76a45P5o2kGbI2XeDR7uuunuoOAKw0LWPPDbF569NYwJWrczEmXIaaToC/vnqpD6awkoXDGZHFkdiku70vHuiL/LAnGJ/uf+u14altvipFfc5VmHylYhsR3EUldOykqC1zl4Y7Yska5+qW5o1c60snxetilNL3+0DP9QTlgK3eKd8y4KFoDeuqx8wZkpursr6aYyiYaUYcCPfw42I7lr/jB4va/RfU3TGozSn3Io5IlhjjZiZCLcqFXJ+yHrOt3sOGJAAEjxH+vUbkdtH7ipLTPpQkp80EMFS76nsD+glBKUad02zdpv2MAQ7OnWMl4hEzqYlidPj7f1EAGq5N+/ST82eqd807Q+aN9A5UfejQqRMItdjRekUsOEsXzmxb6lMzzgj2Qq3zMWiA10VLZKNvNDpjeggugGl33X/isq7jDGcNNWUyPnFrHLc=
+      on:
+        tags: true
 
-    - stage: deploy
-      install: skip
-      before_script: skip
-      script: skip
-      deploy:
-        stage: deploy
-        provider: pypi
-        user: "$PYPI_USER"
-        password:
-          secure: pFnEN/4nfcGNMwOVwBiO5K0hZGVbjPbpMxwxfA9ffGlkJ4lHEU+ElrSvau5TV1Pe0gXCiOHcdHyuEzoi23p75rme+BlNkK+P6YRd0/DCoTFrr80QEKFsyWqoAt7ep67jxKHoO7fy5h1M+VXZwfXZgtiG5zPjkU9cYg0LINf/S7vGMlgz82rv9vZr+u1pG/83oUyeVOibAVnF19XgHXS0BL6VDnc6c4C1odk6AtnSqaI0ASl7q63aXrUbQMpT0+B9esLpEvUHmTrI2t4aI1X02VnhCoM+Ry8b/ltDnFVB0qcnvPqVPdMYdeICnc3bzAJlDUU3xNH1XUo6RWcSbt11woP0MB6NahjYYet7DB8p/dMPgpfbyVSHw2vchy3Kd5teIlssihbuObCPpBhjbdWrKKvhm5rlWslt+Tymcl8MUBNO+2tQiTOGpJZ5dSSyC08VM31+cbxUYWPnmGbFdXlotgrvYMgxLk4n4NVqSa+gG/2wPzWy4OQJhN6eBZEv+qkUhKCB3+5k0/zPOJEjRTh/6b4BG8u+AO9nrNVZsNfY2UgcpeSwdVaU69XijIvQZex2Uck5GdtsWXdrEWhlBzKFXqWK05amavZ5SxsErjT6ljmawE4J8NgL9X+w86k5gJst98bGHhl/7i0V9PX1NwlTHcuAgAZZNAmNtIm1VSm3vWc=
-        on:
-          tags: true
