@@ -5,3 +5,4 @@ recursive-include terra_accounts/static *
 recursive-include terra_accounts/templates *
 recursive-exclude test_terra_accounts *
 recursive-exclude terra_accounts/tests/ *
+include terra_accounts/tests/factories.py
