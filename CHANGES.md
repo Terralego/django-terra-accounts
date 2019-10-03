@@ -5,6 +5,10 @@ CHANGELOG
 0.3.3.dev0      (XXXX-XX-XX)
 ----------------------------
 
+### Feature
+
+* test factories are now included in packaging
+
 
 0.3.2      (2019-09-27)
 -----------------------
