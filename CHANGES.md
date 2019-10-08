@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-0.3.4.dev0      (XXXX-XX-XX)
+0.3.4      (2019-10-08)
 ----------------------------
 
 * Deprecate looking up user by id (will be removed in 0.4.0)
