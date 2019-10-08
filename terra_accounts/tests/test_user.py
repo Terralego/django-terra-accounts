@@ -30,12 +30,29 @@ class UserViewsetTestCase(APITestCase):
     def test_update_uuid(self):
         user = TerraUserFactory()
         self.user.user_permissions.add(
-            *Permission.objects.filter(codename__in=['can_manage_users', ])
+            *Permission.objects.filter(codename__in=['can_manage_users'])
         )
 
         test_uuid = 'test-uuid'
         response = self.client.patch(
-            reverse('terra_accounts:user-detail', args=[user.pk]),
+            f'/api/user/{user.uuid}/',
+            {
+                'uuid': test_uuid,
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        user.refresh_from_db()
+        self.assertEqual(user.uuid, test_uuid)
+
+    def test_update_uuid_deprecated(self):
+        user = TerraUserFactory()
+        self.user.user_permissions.add(
+            *Permission.objects.filter(codename__in=['can_manage_users'])
+        )
+
+        test_uuid = 'test-uuid'
+        response = self.client.patch(
+            f'/api/user/{user.id}/',
             {
                 'uuid': test_uuid,
             }
