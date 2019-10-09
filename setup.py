@@ -35,7 +35,7 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     install_requires=[
-        'django>=2.2,<3.1',
+        'django>=2.2,<3.0',
         'psycopg2>=2.7',  # postgres is required to use JSONField
         'django-terra-utils>=0.3.5',
         'djangorestframework>=3.8',
