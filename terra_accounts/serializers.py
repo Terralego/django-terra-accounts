@@ -93,7 +93,7 @@ class TerraUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
 
     def get_permissions(self, obj):
-        return list(obj.get_all_permissions())
+        return list(obj.get_all_terra_permissions())
 
     def save(self):
         super().save()
