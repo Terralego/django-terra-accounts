@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-0.3.5      (XXXX-XX-XX)
+0.3.5      (2019-11-04)
 ----------------------------
 
 * Implement TerraPermissions
