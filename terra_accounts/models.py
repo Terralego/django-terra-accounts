@@ -3,7 +3,7 @@ import importlib
 import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
@@ -46,6 +46,17 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
     def get_by_natural_key(self, username):
         return self.get(**{f'{self.model.USERNAME_FIELD}__iexact': username})
 
+    def get_all_terra_permissions(self):
+        if self.is_active:
+            if self.is_superuser:
+                perms = TerraPermission.objects.all()
+            else:
+                perms = self.user_permissions.filter(terrapermission__isnull=False)
+        else:
+            perms = TerraPermission.objects.none()
+
+        return perms.values_list('codename', flat=True)
+
     def __str__(self):
         try:
             path = settings.TERRA_USER_STRING_FORMAT
@@ -57,13 +68,13 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         ordering = ['id']
-        permissions = (
-            ('can_manage_users', 'Is able to create, delete, update users'),
-            ('can_manage_groups', 'Is able to create, delete, update groups'),
-        )
 
 
 UserModel = get_user_model()
+
+
+class TerraPermission(Permission):
+    original = models.OneToOneField(Permission, on_delete=models.CASCADE, parent_link=True)
 
 
 class ReadModel(models.Model):
