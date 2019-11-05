@@ -2,6 +2,11 @@
 CHANGELOG
 =========
 
+0.3.6      (XXXX-XX-XX)
+----------------------------
+
+* Add a method to check if a user has some terra permission
+
 0.3.5      (2019-11-04)
 ----------------------------
 

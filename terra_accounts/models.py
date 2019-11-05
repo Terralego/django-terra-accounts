@@ -3,7 +3,7 @@ import importlib
 import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission, _user_has_perm
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
@@ -56,6 +56,9 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
             perms = TerraPermission.objects.none()
 
         return perms.values_list('codename', flat=True)
+
+    def has_terra_perm(self, codename):
+        return _user_has_perm(self, f'{self._meta.app_label}.{codename}', None)
 
     def __str__(self):
         try:
