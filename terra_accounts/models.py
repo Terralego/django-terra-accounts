@@ -57,8 +57,8 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
 
         return perms.values_list('codename', flat=True)
 
-    def has_terra_perm(self, codename):
-        return _user_has_perm(self, f'{self._meta.app_label}.{codename}', None)
+    def has_terra_perm(self, terra_app, codename):
+        return _user_has_perm(self, f'{self._meta.app_label}.{terra_app}_{codename}', None)
 
     def __str__(self):
         try:
