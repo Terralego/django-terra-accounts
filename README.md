@@ -11,7 +11,7 @@ https://django-terra-accounts.readthedocs.io/
 ## WARNING
 
 * splitted from terracommon.accounts
-  
+
 * If you want to migrate data, please :
   * test in local env
     * all terracommon.accounts reference should be replaced by terra_accounts
@@ -26,3 +26,66 @@ https://django-terra-accounts.readthedocs.io/
       * ALTER TABLE accounts_terrauser RENAME TO terra_accounts_terrauser;
       * ALTER TABLE accounts_readmodels RENAME TO terra_accounts_readmodel;
   * Restart instances and launch migrations
+
+## Setting Up
+
+It's recommended to follow all instruction if you don't know how this app really works, else if you set up half of this, you may experience
+some problems.
+
+### Django app and URLs
+
+If you plan to use User API for authentication, registration, and other this, you should add the `terra_accounts` app to INSTALLED_APPS and
+
+```
+INSTALLED_APPS = (
+  [...],
+  'terra_accounts',
+)
+```
+
+And include terra_accounts's URLs to your project urls, by adding this:
+```
+path("", include("terra_accounts.urls")),
+```
+
+
+### User's model
+
+To set up the Terra User Model, you should follow the standard django procedure, by adding this to you project settings:
+```
+AUTH_USER_MODEL = 'terra_accounts.TerraUser'
+```
+
+### Payload handler
+
+You should also override the default payload handler of jwt tokens, setting this:
+```
+JWT_AUTH = {
+  'JWT_PAYLOAD_HANDLER' 'terra_accounts.jwt_payload.terra_payload_handler',
+}
+```
+
+
+### Permissions mixin
+
+If you plan to use the permission mecanism which heritate from django Permission class you should add the permission mixin
+to your appconfig's.
+
+There is an exemple of AppConfig
+```
+from django.apps import AppConfig
+
+from terra_accounts.permissions_mixins import PermissionRegistrationMixin
+
+
+class MyAppConfig(PermissionRegistrationMixin, AppConfig):
+    name = 'my_app'
+
+    permissions = (
+        ('can_do_something', 'Is able to do something'),
+        ('can_do_whatever', 'Is able to do whatever'),
+    )
+```
+
+The permission mixin, overrides the `ready()` method to register a signal. If you plan to override this method, do not
+forget to add a call to `super().ready()`
