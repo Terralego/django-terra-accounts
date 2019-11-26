@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-0.3.7           (2019-11-26)
+0.3.7.1         (2019-11-26)
 ----------------------------
 
 * Include inherited permissions from groups to user
