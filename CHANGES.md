@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-0.3.7.dev0      (XXXX-XX-XX)
+0.3.7           (2019-11-26)
 ----------------------------
 
 * Include inherited permissions from groups to user
