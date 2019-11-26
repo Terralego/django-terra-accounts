@@ -3,11 +3,12 @@ import importlib
 import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission, _user_has_perm
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission, _user_has_perm, Group
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -48,13 +49,13 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
 
     def get_all_terra_permissions(self):
         if self.is_active:
-            if self.is_superuser:
-                perms = TerraPermission.objects.all()
-            else:
-                perms = self.user_permissions.filter(terrapermission__isnull=False)
+            perms = TerraPermission.objects.all()
+
+            if not self.is_superuser:
+                perms = perms.filter(Q(pk__in=self.user_permissions.all()) |
+                                     Q(group__in=self.groups.all()))
         else:
             perms = TerraPermission.objects.none()
-
         return perms.values_list('codename', flat=True)
 
     def has_terra_perm(self, codename):
