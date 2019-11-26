@@ -3,7 +3,7 @@ import importlib
 import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission, _user_has_perm, Group
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission, _user_has_perm
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
@@ -52,8 +52,8 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
             perms = TerraPermission.objects.all()
 
             if not self.is_superuser:
-                perms = perms.filter(Q(pk__in=self.user_permissions.all()) |
-                                     Q(group__in=self.groups.all()))
+                perms = perms.filter(Q(pk__in=self.user_permissions.all())
+                                     | Q(group__in=self.groups.all()))
         else:
             perms = TerraPermission.objects.none()
         return perms.values_list('codename', flat=True)
