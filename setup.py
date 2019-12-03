@@ -33,13 +33,17 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Framework :: Django',
+        'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
     ],
     install_requires=[
-        'django>=2.2,<3.0',
-        'psycopg2>=2.7',  # postgres is required to use JSONField
+        'django>=2.2',
+        'psycopg2',  # postgres is required to use JSONField
         'django-terra-utils>=0.3.5',
-        'djangorestframework>=3.8',
-        "djangorestframework-jwt>=1.11",
+        'djangorestframework',
+        "djangorestframework-jwt",
         "django-url-filter>=0.3",
     ],
     extras_require={
