@@ -89,3 +89,35 @@ class MyAppConfig(PermissionRegistrationMixin, AppConfig):
 
 The permission mixin, overrides the `ready()` method to register a signal. If you plan to override this method, do not
 forget to add a call to `super().ready()`
+
+
+## To start a dev instance
+
+Define settings you wants in `test_geosource` django project.
+
+```sh
+docker-compose up
+```
+
+First start should failed as the database need to be initialized. Just launch
+the same command twice.
+
+Then initialize the database:
+
+```sh
+docker-compose run web /code/venv/bin/python3 /code/src/manage.py migrate
+```
+
+You can now edit your code. A django runserver is launched internally so the
+this is an autoreload server.
+
+You can access to the api on http://localhost:8000/api/
+
+
+## Test
+
+To run test suite, just launch:
+
+```sh
+docker-compose run web /code/venv/bin/python3 /code/src/manage.py test
+```

@@ -2,8 +2,11 @@
 CHANGELOG
 =========
 
+
 0.3.8.dev0      (XXXX-XX-XX)
 ----------------------------
+
+* Update documentation
 
 
 0.3.7.1         (2019-11-26)
