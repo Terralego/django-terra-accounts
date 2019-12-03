@@ -2,10 +2,19 @@
 CHANGELOG
 =========
 
-0.3.7      (XXXX-XX-XX)
+
+0.3.8.dev0      (XXXX-XX-XX)
 ----------------------------
 
 * Update documentation
+
+
+0.3.7.1         (2019-11-26)
+----------------------------
+
+* Include inherited permissions from groups to user
+* Improve Terra Permission creation
+
 
 0.3.6      (2019-11-05)
 ----------------------------

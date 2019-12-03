@@ -14,8 +14,10 @@ def permission_callback(sender, **kwargs):
 
         ctype = ContentType.objects.get_for_model(TerraPermission)
 
-        TerraPermission.objects.get_or_create(
+        TerraPermission.objects.update_or_create(
             content_type=ctype,
             codename=perm,
-            name=name,
+            defaults={
+                'name': name,
+            }
         )
