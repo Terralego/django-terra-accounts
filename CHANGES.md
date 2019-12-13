@@ -3,10 +3,12 @@ CHANGELOG
 =========
 
 
-0.3.8.dev0      (XXXX-XX-XX)
+0.3.8           (2019-12-13)
 ----------------------------
 
 * Update documentation
+* Support Django 3.0
+* Support DjangoRestFramework 3.11
 
 
 0.3.7.1         (2019-11-26)

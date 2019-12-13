@@ -11,9 +11,9 @@ from .views import (DeprecatedUserViewSet, GroupViewSet,
 app_name = 'terra_accounts'
 
 router = routers.SimpleRouter()
-router.register(r'user', DeprecatedUserViewSet, base_name='user')
-router.register(r'user', UserViewSet, base_name='user')
-router.register(r'groups', GroupViewSet, base_name='group')
+router.register(r'user', DeprecatedUserViewSet, basename='user')
+router.register(r'user', UserViewSet, basename='user')
+router.register(r'groups', GroupViewSet, basename='group')
 urlpatterns = router.urls
 
 urlpatterns += [
