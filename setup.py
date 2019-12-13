@@ -41,9 +41,9 @@ setup(
     install_requires=[
         'django>=2.2',
         'psycopg2',  # postgres is required to use JSONField
-        'django-terra-utils>=0.3.5',
-        'djangorestframework',
+        'django-terra-utils>=0.3.10',
         "djangorestframework-jwt",
+        'djangorestframework',
         "django-url-filter>=0.3",
     ],
     extras_require={
