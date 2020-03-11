@@ -41,3 +41,11 @@ you can disable and / or customize admin
 
 
 - BACKWARD compatibility
+
+# Password reset
+
+* you must set settings to correctly generate and send email for password reset.
+
+  * FRONT_URL : default to http://localhost:3000 . Should match with your front url
+  * Other settings to send mails ->
+  * https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-EMAIL_HOST
