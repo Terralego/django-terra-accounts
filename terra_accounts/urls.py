@@ -25,10 +25,10 @@ urlpatterns += [
     path('auth/refresh-token/', auth_views.refresh_jwt_token, name='token-refresh'),
 
     # reset lost password
-    path('auth/password_reset/', base_auth_views.PasswordResetView.as_view(
+    path('auth/password-reset/', base_auth_views.PasswordResetView.as_view(
         success_url=reverse_lazy('terra_accounts:password_reset_done'),
         email_template_name='registration/accounts_password_reset_email.html'), name='password_reset'),
-    path('auth/password_reset/done/', base_auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('auth/password-reset/done/', base_auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     url(r'^auth/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         base_auth_views.PasswordResetConfirmView.as_view(
             success_url=reverse_lazy('terra_accounts:password_reset_complete'),), name='password_reset_confirm'),
