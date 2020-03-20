@@ -2,8 +2,10 @@
 CHANGELOG
 =========
 
-0.3.9.dev0      (XXXX-XX-XX)
+0.3.9           (2020-03-20)
 ----------------------------
+
+* Manage reset password views
 
 
 0.3.8           (2019-12-13)
