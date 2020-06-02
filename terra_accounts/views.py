@@ -176,9 +176,8 @@ class SettingsView(APIView):
         terra_settings = {
             'jwt_delta': jwt_settings.JWT_EXPIRATION_DELTA,
             # for the moment, language is fixed and defined by backend instance
-            'language': settings.LANGUAGE_CODE
+            'language': settings.LANGUAGE_CODE.lower()
         }
 
         terra_settings.update(TERRA_APPLIANCE_SETTINGS)
-
         return Response(terra_settings)
