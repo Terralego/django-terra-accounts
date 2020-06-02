@@ -12,7 +12,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_jwt.settings import api_settings as jwt_settings
 from terra_utils.filters import JSONFieldOrderingFilter
+from terra_utils.settings import TERRA_APPLIANCE_SETTINGS
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from .forms import PasswordSetAndResetForm
@@ -164,3 +166,19 @@ class GroupViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class SettingsView(APIView):
+    permission_classes = ()
+    authentication_classes = ()
+
+    def get(self, request):
+        terra_settings = {
+            'jwt_delta': jwt_settings.JWT_EXPIRATION_DELTA,
+            # for the moment, language is fixed and defined by backend instance
+            'language': settings.LANGUAGE_CODE
+        }
+
+        terra_settings.update(TERRA_APPLIANCE_SETTINGS)
+
+        return Response(terra_settings)

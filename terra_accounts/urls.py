@@ -8,7 +8,7 @@ from rest_framework_jwt import views as auth_views
 from .views import (DeprecatedUserViewSet, GroupViewSet,
                     UserChangePasswordView, UserInformationsView,
                     UserProfileView, UserRegisterView, UserSetPasswordView,
-                    UserViewSet)
+                    UserViewSet, SettingsView)
 
 app_name = 'terra_accounts'
 
@@ -19,6 +19,8 @@ router.register(r'groups', GroupViewSet, basename='group')
 urlpatterns = router.urls
 
 urlpatterns += [
+    # settings
+    path('settings/', SettingsView.as_view(), name='settings'),
     # jwt process
     path('auth/obtain-token/', auth_views.obtain_jwt_token, name='token-obtain'),
     path('auth/verify-token/', auth_views.verify_jwt_token, name='token-verify'),
