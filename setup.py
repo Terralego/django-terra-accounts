@@ -39,7 +39,7 @@ setup(
         'Framework :: Django :: 3.0',
     ],
     install_requires=[
-        'django>=2.2',
+        'django>=2.2,<3.1',
         'psycopg2',  # postgres is required to use JSONField
         'django-terra-utils>=0.3.10',
         "djangorestframework-jwt",
