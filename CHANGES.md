@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-0.3.10.dev0     (XXXX-XX-XX)
+0.3.10          (2020-06-03)
 ----------------------------
 
 * Move settings endpoint from terra_utils
