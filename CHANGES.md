@@ -5,6 +5,8 @@ CHANGELOG
 0.3.10.dev0     (XXXX-XX-XX)
 ----------------------------
 
+* Move settings endpoint from terra_utils
+* Serve language from instance defined language
 
 0.3.9           (2020-03-20)
 ----------------------------
