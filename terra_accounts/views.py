@@ -14,7 +14,6 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_jwt.settings import api_settings as jwt_settings
 from terra_utils.filters import JSONFieldOrderingFilter
-from terra_utils.settings import TERRA_APPLIANCE_SETTINGS
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from .forms import PasswordSetAndResetForm
@@ -179,5 +178,5 @@ class SettingsView(APIView):
             'language': settings.LANGUAGE_CODE.lower()
         }
 
-        terra_settings.update(TERRA_APPLIANCE_SETTINGS)
+        terra_settings.update(getattr(settings, 'TERRA_APPLIANCE_SETTINGS', {}))
         return Response(terra_settings)
