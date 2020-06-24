@@ -2,7 +2,7 @@
 CHANGELOG
 =========
 
-0.3.11.dev0     (XXXX-XX-XX)
+0.3.11         (2020-06-24)
 ----------------------------
 
 * Fix settings override by TERRA_APPLIANCE_SETTINGS
