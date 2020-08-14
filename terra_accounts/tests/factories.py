@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 
 
-class TerraUserFactory(factory.DjangoModelFactory):
+class TerraUserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = UserModel
