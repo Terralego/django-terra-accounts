@@ -2,7 +2,10 @@
 
 import uuid
 
-import django.contrib.postgres.fields.jsonb
+try:
+    from django.db.models import JSONField
+except ImportError:  # TODO Remove when dropping Django releases < 3.1
+    from django.contrib.postgres.fields import JSONField
 import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
@@ -28,7 +31,7 @@ class Migration(migrations.Migration):
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name='unique identifier')),
                 ('email', models.EmailField(blank=True, max_length=254, unique=True, verbose_name='email address')),
-                ('properties', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
+                ('properties', JSONField(blank=True, default=dict)),
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
