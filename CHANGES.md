@@ -2,8 +2,11 @@
 CHANGELOG
 =========
 
-0.3.12.dev0     (XXXX-XX-XX)
+0.3.12         (2020-08-25)
 ----------------------------
+
+* Using django.db.models.JSONField instead of django.contrib.postgres.fields
+* New DjangoModelFactory location
 
 
 0.3.11         (2020-06-24)
