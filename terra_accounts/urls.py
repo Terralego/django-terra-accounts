@@ -40,8 +40,7 @@ urlpatterns += [
     path('auth/user/', UserInformationsView.as_view()),
     path('accounts/user/', UserProfileView.as_view(), name='profile'),
     path('accounts/register/', UserRegisterView.as_view(), name='register'),
-    url((r'^accounts/change-password/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/'
-         r'(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$'),
-        UserSetPasswordView.as_view(), name='reset-password'),
+    path('accounts/change-password/reset/<slug:uidb64>/<slug:token>/',
+         UserSetPasswordView.as_view(), name='reset-password'),
     path('accounts/change-password/reset/', UserChangePasswordView.as_view(), name='new-password'),
 ]
