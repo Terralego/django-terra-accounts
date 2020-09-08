@@ -40,7 +40,7 @@ urlpatterns += [
     path('auth/user/', UserInformationsView.as_view()),
     path('accounts/user/', UserProfileView.as_view(), name='profile'),
     path('accounts/register/', UserRegisterView.as_view(), name='register'),
-    path('accounts/change-password/reset/<slug:uidb64>/<slug:uidb64>/',
+    path('accounts/change-password/reset/<slug:uidb64>/<slug:token>/',
          UserSetPasswordView.as_view(), name='reset-password'),
     path('accounts/change-password/reset/', UserChangePasswordView.as_view(), name='new-password'),
 ]
