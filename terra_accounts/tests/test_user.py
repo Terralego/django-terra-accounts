@@ -15,7 +15,7 @@ class UserViewsetTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_no_permission(self):
-        response = self.client.get(reverse('terra_accounts:user-list')).json()
+        response = self.client.get(reverse('user-list')).json()
         # List must be empty with no rights
         self.assertEqual(0, response.get('count'))
 
@@ -23,7 +23,7 @@ class UserViewsetTestCase(APITestCase):
         self.user.user_permissions.add(
             *Permission.objects.filter(codename__in=['can_manage_users', ])
         )
-        response = self.client.get(reverse('terra_accounts:user-list')).json()
+        response = self.client.get(reverse('user-list')).json()
         # List must contain all database users
         self.assertEqual(UserModel.objects.count(), response.get('count'))
 
@@ -36,23 +36,6 @@ class UserViewsetTestCase(APITestCase):
         test_uuid = 'test-uuid'
         response = self.client.patch(
             f'/api/user/{user.uuid}/',
-            {
-                'uuid': test_uuid,
-            }
-        )
-        self.assertEqual(response.status_code, 200)
-        user.refresh_from_db()
-        self.assertEqual(user.uuid, test_uuid)
-
-    def test_update_uuid_deprecated(self):
-        user = TerraUserFactory()
-        self.user.user_permissions.add(
-            *Permission.objects.filter(codename__in=['can_manage_users'])
-        )
-
-        test_uuid = 'test-uuid'
-        response = self.client.patch(
-            f'/api/user/{user.id}/',
             {
                 'uuid': test_uuid,
             }

@@ -108,16 +108,3 @@ class TerraUserSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ('is_superuser', 'email', 'uuid', 'properties',
                   'is_staff', 'is_active', 'permissions', 'groups', 'password')
-
-
-class DeprecatedTerraUserSerializer(TerraUserSerializer):
-    def __init__(self, instance=None, data=empty, **kwargs):
-        warnings.warn(
-            "`DeprecatedTerraUserSerializer` will be removed, along with its "
-            "`id` field, use `TerraUserSerializer` instead.",
-            DeprecationWarning
-        )
-        super().__init__(instance=instance, data=data, **kwargs)
-
-    class Meta(TerraUserSerializer.Meta):
-        fields = ('id',) + TerraUserSerializer.Meta.fields

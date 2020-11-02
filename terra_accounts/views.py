@@ -13,12 +13,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_jwt.settings import api_settings as jwt_settings
-from terra_utils.filters import JSONFieldOrderingFilter
+from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission
-from .serializers import (DeprecatedTerraUserSerializer, GroupSerializer,
+from .serializers import (GroupSerializer,
                           PasswordChangeSerializer, PasswordResetSerializer,
                           TerraUserSerializer, UserProfileSerializer)
 
@@ -121,12 +121,6 @@ class UserChangePasswordView(APIView):
         return Response(user_serializer.to_representation(serializer.user))
 
 
-class UserInformationsView(APIView):
-    def get(self, request):
-        user = self.request.user
-        return Response(DeprecatedTerraUserSerializer(user).data)
-
-
 class UserViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     parser_classes = (JSONParser, )
@@ -145,20 +139,6 @@ class UserViewSet(ModelViewSet):
             return UserModel.objects.all()
 
         return self.queryset
-
-
-class DeprecatedUserViewSet(UserViewSet):
-    lookup_field = 'pk'
-    lookup_value_regex = '[0-9]+'
-    serializer_class = DeprecatedTerraUserSerializer
-
-    def dispatch(self, *args, **kwargs):
-        import warnings
-        warnings.warn(
-            "Looking up a user by `id` is deprecated, use `uuid` instead.",
-            DeprecationWarning
-        )
-        return super().dispatch(*args, **kwargs)
 
 
 class GroupViewSet(ModelViewSet):

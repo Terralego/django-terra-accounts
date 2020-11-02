@@ -15,13 +15,13 @@ class RegistrationTestCase(TestCase):
         """
 
         # unauthenticated user must be stopped
-        response = self.client.get(reverse('terra_accounts:profile'))
+        response = self.client.get(reverse('profile'))
         self.assertEqual(401, response.status_code)
 
         # let's try with an authenticated user
         self.client.force_authenticate(user=self.user)
 
-        response = self.client.get(reverse('terra_accounts:profile'))
+        response = self.client.get(reverse('profile'))
         self.assertEqual(200, response.status_code)
         self.assertEqual(str(self.user.uuid), response.json()['uuid'])
 
@@ -31,7 +31,7 @@ class RegistrationTestCase(TestCase):
             'lastname': 'Malkovitch'
         }
 
-        self.client.patch(reverse('terra_accounts:profile'), {
+        self.client.patch(reverse('profile'), {
             'properties': properties
         }, format='json')
 
@@ -39,7 +39,7 @@ class RegistrationTestCase(TestCase):
         self.assertDictEqual(properties, self.user.properties)
 
         # changing e-mail is forbidden
-        response = self.client.patch(reverse('terra_accounts:profile'), {
+        response = self.client.patch(reverse('profile'), {
             'email': 'john@lennon.com'
         }, format='json')
 

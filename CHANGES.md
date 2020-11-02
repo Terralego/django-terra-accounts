@@ -2,8 +2,13 @@
 CHANGELOG
 =========
 
-0.3.14.dev0     (XXXX-XX-XX)
+0.5.0.dev0     (XXXX-XX-XX)
 ----------------------------
+
+* Breaking changes
+  * Used with django-terra-settings instead of django-terra-utils
+  * Please update your project requirements and code to use new terra-settings app.
+  * Remove deprecated user viewset / serializer / info endpoint
 
 
 0.3.13          (2020-09-08)

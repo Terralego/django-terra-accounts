@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_jwt',
-    'terra_utils',
+    'terra_settings',
     'terra_accounts',
 ]
 
@@ -134,7 +134,7 @@ AUTH_USER_MODEL = 'terra_accounts.TerraUser'
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PAGINATION_CLASS':
-        'terra_utils.pagination.PagePagination',
+        'terra_settings.pagination.PagePagination',
     'PAGE_SIZE': 100,
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',

@@ -22,7 +22,7 @@ class UserViewsetTestCase(APITestCase):
 
     def test_group_detail(self):
         response = self.client.get(
-            reverse('terra_accounts:group-detail', args=[self.group.pk])
+            reverse('group-detail', args=[self.group.pk])
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         # The user must be in the group
@@ -35,7 +35,7 @@ class UserViewsetTestCase(APITestCase):
             "name": "test group 3"
         }
         response = self.client.post(
-            reverse('terra_accounts:group-list'),
+            reverse('group-list'),
             data,
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -50,7 +50,7 @@ class UserViewsetTestCase(APITestCase):
             "users": [self.user.id],
         }
         response = self.client.post(
-            reverse('terra_accounts:group-list'),
+            reverse('group-list'),
             data,
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -65,7 +65,7 @@ class UserViewsetTestCase(APITestCase):
             "users": [self.user.id],
         }
         response = self.client.post(
-            reverse('terra_accounts:group-list'),
+            reverse('group-list'),
             data,
         )
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
@@ -75,7 +75,7 @@ class UserViewsetTestCase(APITestCase):
             "name": "new group name"
         }
         response = self.client.patch(
-            reverse('terra_accounts:group-detail', args=[self.group.pk]),
+            reverse('group-detail', args=[self.group.pk]),
             data,
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -92,7 +92,7 @@ class UserViewsetTestCase(APITestCase):
             "users": [new_user.id],
         }
         response = self.client.patch(
-            reverse('terra_accounts:group-detail', args=[self.group.pk]),
+            reverse('group-detail', args=[self.group.pk]),
             data,
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -112,7 +112,7 @@ class UserViewsetTestCase(APITestCase):
             "users": [new_user.id],
         }
         response = self.client.put(
-            reverse('terra_accounts:group-detail', args=[self.group.pk]),
+            reverse('group-detail', args=[self.group.pk]),
             data,
         )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -127,7 +127,7 @@ class UserViewsetTestCase(APITestCase):
 
     def test_delete_group(self):
         response = self.client.delete(
-            reverse('terra_accounts:group-detail', args=[self.group.pk])
+            reverse('group-detail', args=[self.group.pk])
         )
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(0, Group.objects.count())

@@ -12,7 +12,7 @@ class ChangePasswordTestCase(APITestCase):
 
     def test_change_password(self):
         response = self.client.post(
-            reverse('terra_accounts:new-password'),
+            reverse('new-password'),
             {
                 'old_password': '123456',
                 'new_password1': 'thisismynewpassword',
@@ -26,7 +26,7 @@ class ChangePasswordTestCase(APITestCase):
 
     def test_change_password_not_same(self):
         response = self.client.post(
-            reverse('terra_accounts:new-password'),
+            reverse('new-password'),
             {
                 'old_password': '123456',
                 'new_password1': '654321',
@@ -41,7 +41,7 @@ class ChangePasswordTestCase(APITestCase):
 
     def test_change_password_wrong_old_password(self):
         response = self.client.post(
-            reverse('terra_accounts:new-password'),
+            reverse('new-password'),
             {
                 'old_password': '654321',
                 'new_password1': 'whocares',
@@ -55,7 +55,7 @@ class ChangePasswordTestCase(APITestCase):
 
     def test_change_password_missing_confirmation_password(self):
         response = self.client.post(
-            reverse('terra_accounts:new-password'),
+            reverse('new-password'),
             {
                 'old_password': '123456',
                 'new_password1': '654321',
@@ -69,7 +69,7 @@ class ChangePasswordTestCase(APITestCase):
     def test_change_password_without_authentication(self):
         self.client.logout()
         response = self.client.post(
-            reverse('terra_accounts:new-password'),
+            reverse('new-password'),
             {
                 'old_password': '123456',
                 'new_password1': '654321',
