@@ -15,7 +15,7 @@ class AccountsConfig(PermissionRegistrationMixin, AppConfig):
     )
 
     def ready(self):
-        # terra_accounts need to add jwt_delta key in terra_utils settings endpoint
+        # terra_accounts need to add jwt_delta key in terra-settings settings endpoint
         terra_settings = getattr(settings, 'TERRA_APPLIANCE_SETTINGS', {})
         terra_settings.setdefault('jwt_delta', api_settings.JWT_EXPIRATION_DELTA)
         super().ready()

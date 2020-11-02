@@ -6,6 +6,7 @@ CHANGELOG
 ----------------------------
 
 * Breaking changes
+  * terra-accounts settings endpoint is now removed in favor of terra-settings settings endpoint
   * Used with django-terra-settings instead of django-terra-utils
   * Please update your project requirements and code to use new terra-settings app.
   * Remove deprecated user viewset / serializer / info endpoint

@@ -12,7 +12,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_jwt.settings import api_settings as jwt_settings
 from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
@@ -70,14 +69,6 @@ class UserRegisterView(APIView):
 
                 serializer = TerraUserSerializer(user)
 
-                if 'terracommon.events' in settings.INSTALLED_APPS:
-                    from terracommon.events.signals import event
-                    event.send(
-                        self.__class__,
-                        action="USER_CREATED",
-                        user=user,
-                        instance=user
-                    )
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data=form.errors,
@@ -145,18 +136,3 @@ class GroupViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-
-
-class SettingsView(APIView):
-    permission_classes = ()
-    authentication_classes = ()
-
-    def get(self, request):
-        terra_settings = {
-            'jwt_delta': jwt_settings.JWT_EXPIRATION_DELTA,
-            # for the moment, language is fixed and defined by backend instance
-            'language': settings.LANGUAGE_CODE.lower()
-        }
-
-        terra_settings.update(getattr(settings, 'TERRA_APPLIANCE_SETTINGS', {}))
-        return Response(terra_settings)
