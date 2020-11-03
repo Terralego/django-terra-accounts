@@ -88,13 +88,13 @@ class GroupSerializer(serializers.ModelSerializer):
 class TerraUserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, required=False)
+    uuid = serializers.UUIDField(read_only=True)
 
     def get_permissions(self, obj):
         return list(obj.get_all_terra_permissions())
 
     def save(self):
         super().save()
-
         if 'password' in self.validated_data:
             self.instance.set_password(self.validated_data['password'])
             self.instance.save()
@@ -103,5 +103,5 @@ class TerraUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('is_superuser', 'email', 'uuid', 'properties',
+        fields = ('id', 'is_superuser', 'email', 'uuid', 'properties',
                   'is_staff', 'is_active', 'permissions', 'groups', 'password')
