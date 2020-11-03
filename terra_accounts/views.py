@@ -8,7 +8,7 @@ from rest_framework import permissions, status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -19,7 +19,8 @@ from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission
 from .serializers import (GroupSerializer,
                           PasswordChangeSerializer, PasswordResetSerializer,
-                          TerraUserSerializer, UserProfileSerializer)
+                          TerraUserSerializer, UserProfileSerializer, TerraStaffUserSerializer,
+                          TerraSimpleUserSerializer)
 
 UserModel = get_user_model()
 
@@ -40,20 +41,19 @@ class UserRegisterView(APIView):
 
     def post(self, request):
         form = PasswordSetAndResetForm(data=request.data)
+        opts = {
+            'token_generator': default_token_generator,
+            'from_email': settings.DEFAULT_FROM_EMAIL,
+            'email_template_name':
+                'registration/registration_email.txt',
+            'subject_template_name':
+                'registration/registration_email_subject.txt',
+            'request': self.request,
+            'html_email_template_name':
+                'registration/registration_email.html',
+        }
         try:
             if form.is_valid():
-                opts = {
-                    'token_generator': default_token_generator,
-                    'from_email': settings.DEFAULT_FROM_EMAIL,
-                    'email_template_name':
-                        'registration/registration_email.txt',
-                    'subject_template_name':
-                        'registration/registration_email_subject.txt',
-                    'request': self.request,
-                    'html_email_template_name':
-                        'registration/registration_email.html',
-                }
-
                 with transaction.atomic():
                     user = get_user_model().objects.create(
                         **{
@@ -115,21 +115,26 @@ class UserChangePasswordView(APIView):
 class UserViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     parser_classes = (JSONParser, )
-    serializer_class = TerraUserSerializer
     queryset = UserModel.objects.none()
     filter_backends = (DjangoFilterBackend, JSONFieldOrderingFilter,
                        SearchFilter, )
     search_fields = ('uuid', 'email', 'properties', )
     filter_fields = ('uuid', 'email', 'properties', 'groups', 'is_superuser',
                      'is_active', 'is_staff', 'date_joined')
-    lookup_field = 'uuid'
-    lookup_value_regex = '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
 
     def get_queryset(self):
         if self.request.user.has_perm('terra_accounts.can_manage_users'):
             return UserModel.objects.all()
 
         return self.queryset
+
+    def get_serializer_class(self):
+        if self.request.method not in SAFE_METHODS:
+            """ in write endpoints, use customs serializers to avoid privilege escalation """
+            user = self.request.user
+            if not user.is_superuser:
+                return TerraStaffUserSerializer if user.is_staff else TerraSimpleUserSerializer
+        return TerraUserSerializer
 
 
 class GroupViewSet(ModelViewSet):

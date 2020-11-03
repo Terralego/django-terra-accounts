@@ -105,3 +105,13 @@ class TerraUserSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ('id', 'is_superuser', 'email', 'uuid', 'properties',
                   'is_staff', 'is_active', 'permissions', 'groups', 'password')
+
+
+class TerraStaffUserSerializer(TerraUserSerializer):
+    """ A staff user cannot edit is_superuser status """
+    is_superuser = serializers.BooleanField(read_only=True)
+
+
+class TerraSimpleUserSerializer(TerraStaffUserSerializer):
+    """ A simple user cannot edit is_staff and is_superuser status """
+    is_staff = serializers.BooleanField(read_only=True)
