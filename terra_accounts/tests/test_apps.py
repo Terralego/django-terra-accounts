@@ -9,4 +9,5 @@ class AppTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = response.json()
+        self.assertIn('jwt_delta', data)
         self.assertEqual(data['jwt_delta'], "9999.0")

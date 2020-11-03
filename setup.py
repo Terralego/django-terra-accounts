@@ -42,7 +42,7 @@ setup(
     install_requires=[
         'django>=2.2',
         'psycopg2',  # postgres is required to use JSONField
-        'django-terra-settings',
+        'django-terra-settings@https://github.com/Terralego/django-terra-settings/archive/update_settings.tar.gz',
         "djangorestframework-jwt",
         'djangorestframework',
         "django-url-filter>=0.3",

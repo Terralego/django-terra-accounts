@@ -17,7 +17,7 @@ class UserViewsetTestCase(APITestCase):
     def test_no_permission(self):
         response = self.client.get(reverse('user-list')).json()
         # List must be empty with no rights
-        self.assertEqual(0, response.get('count'))
+        self.assertEqual(0, len(response))
 
     def test_userlist(self):
         self.user.user_permissions.add(
@@ -25,7 +25,7 @@ class UserViewsetTestCase(APITestCase):
         )
         response = self.client.get(reverse('user-list')).json()
         # List must contain all database users
-        self.assertEqual(UserModel.objects.count(), response.get('count'))
+        self.assertEqual(UserModel.objects.count(), len(response))
 
     def test_update_uuid(self):
         user = TerraUserFactory()
