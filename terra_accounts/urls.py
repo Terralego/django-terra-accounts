@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.auth import views as base_auth_views
-from django.urls import path
+from django.urls import path, include
 from rest_framework import routers
 from rest_framework.reverse import reverse_lazy
 from rest_framework_jwt import views as auth_views
@@ -13,9 +13,8 @@ from .views import (GroupViewSet,
 router = routers.SimpleRouter()
 router.register(r'user', UserViewSet, basename='user')
 router.register(r'groups', GroupViewSet, basename='group')
-urlpatterns = router.urls
 
-urlpatterns += [
+urlpatterns = [
     # jwt process
     path('auth/obtain-token/', auth_views.obtain_jwt_token, name='token-obtain'),
     path('auth/verify-token/', auth_views.verify_jwt_token, name='token-verify'),
@@ -37,4 +36,5 @@ urlpatterns += [
     path('accounts/change-password/reset/<slug:uidb64>/<slug:token>/',
          UserSetPasswordView.as_view(), name='reset-password'),
     path('accounts/change-password/reset/', UserChangePasswordView.as_view(), name='new-password'),
+    path('', include(router.urls))
 ]
