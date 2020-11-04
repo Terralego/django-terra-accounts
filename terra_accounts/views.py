@@ -8,8 +8,6 @@ from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import AllowAny, IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -17,7 +15,7 @@ from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from .forms import PasswordSetAndResetForm
-from .permissions import GroupAdminPermission
+from .permissions import GroupAdminPermission, UserAdminPermission
 from .serializers import (GroupSerializer,
                           PasswordChangeSerializer, PasswordResetSerializer,
                           TerraUserSerializer, UserProfileSerializer, TerraStaffUserSerializer,
@@ -28,7 +26,7 @@ UserModel = get_user_model()
 
 class UserProfileView(RetrieveUpdateAPIView):
     serializer_class = UserProfileSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
@@ -38,7 +36,7 @@ class UserProfileView(RetrieveUpdateAPIView):
 
 
 class UserRegisterView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request):
         form = PasswordSetAndResetForm(data=request.data)
@@ -88,7 +86,7 @@ class UserRegisterView(APIView):
 
 
 class UserSetPasswordView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request, uidb64, token):
         serializer = PasswordResetSerializer(uidb64, token, data=request.data)
@@ -101,7 +99,7 @@ class UserSetPasswordView(APIView):
 
 
 class UserChangePasswordView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request):
         serializer = PasswordChangeSerializer(request.user, data=request.data)
@@ -114,28 +112,27 @@ class UserChangePasswordView(APIView):
 
 
 class UserViewSet(ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
-    parser_classes = (JSONParser, )
-    queryset = UserModel.objects.none()
+    queryset = UserModel.objects.all()
     filter_backends = (DjangoFilterBackend, JSONFieldOrderingFilter,
                        SearchFilter, )
     search_fields = ('uuid', 'email', 'properties', )
     filter_fields = ('uuid', 'email', 'properties', 'groups', 'is_superuser',
                      'is_active', 'is_staff', 'date_joined')
 
-    def get_queryset(self):
-        if self.request.user.has_perm('terra_accounts.can_manage_users'):
-            return UserModel.objects.all()
-
-        return self.queryset
-
     def get_serializer_class(self):
-        if self.request.method not in SAFE_METHODS:
-            """ in write endpoints, use customs serializers to avoid privilege escalation """
+        """ in write endpoints, use customs serializers to avoid privilege escalation """
+        if self.request.method not in permissions.SAFE_METHODS:
             user = self.request.user
             if not user.is_superuser:
                 return TerraStaffUserSerializer if user.is_staff else TerraSimpleUserSerializer
         return TerraUserSerializer
+
+    def get_permissions(self):
+        """ Simple Auth to access profile, Admin perm to manage viewset """
+        if self.action == "profile":
+            return [permissions.IsAuthenticated]
+        else:
+            return [UserAdminPermission]
 
     @action(detail=False, serializer_class=TerraUserSerializer)
     def profile(self, request, *args, **kwargs):
@@ -144,6 +141,6 @@ class UserViewSet(ModelViewSet):
 
 
 class GroupViewSet(ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
+    permission_classes = (GroupAdminPermission, )
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
