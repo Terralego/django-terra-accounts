@@ -31,7 +31,7 @@ urlpatterns = [
     path('auth/reset/done/', base_auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     # account management
-    path('accounts/user/', UserViewSet.as_view({"get": "profile"}), name='profile'),  # deprecated
+    path('accounts/user/', UserViewSet.as_view({"get": "profile"}), name='profile'),  # deprecated, use user/profile
     path('accounts/register/', UserRegisterView.as_view(), name='register'),
     path('accounts/change-password/reset/<slug:uidb64>/<slug:token>/',
          UserSetPasswordView.as_view(), name='reset-password'),
