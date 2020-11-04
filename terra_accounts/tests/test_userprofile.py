@@ -22,9 +22,3 @@ class RegistrationTestCase(APITestCase):
         response = self.client.get(reverse('profile'))
         self.assertEqual(200, response.status_code)
         self.assertEqual(str(self.user.uuid), response.json()['uuid'])
-
-        # and try to update the profile
-        properties = {
-            'firstname': 'John',
-            'lastname': 'Malkovitch'
-        }
