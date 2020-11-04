@@ -63,14 +63,6 @@ class PasswordResetSerializer(PasswordChangeSerializer):
         return super().validate(attrs)
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = UserModel
-        fields = ('uuid', 'email', 'properties')
-        read_only_fields = ('uuid', UserModel.USERNAME_FIELD, )
-
-
 class GroupSerializer(serializers.ModelSerializer):
     users = serializers.PrimaryKeyRelatedField(
         many=True,

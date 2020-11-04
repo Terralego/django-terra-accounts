@@ -7,7 +7,6 @@ from django.db.utils import IntegrityError
 from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -18,21 +17,10 @@ from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission, UserAdminPermission
 from .serializers import (GroupSerializer,
                           PasswordChangeSerializer, PasswordResetSerializer,
-                          TerraUserSerializer, UserProfileSerializer, TerraStaffUserSerializer,
+                          TerraUserSerializer, TerraStaffUserSerializer,
                           TerraSimpleUserSerializer)
 
 UserModel = get_user_model()
-
-
-class UserProfileView(RetrieveUpdateAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_object(self):
-        return self.request.user
-
-    def get_queryset(self):
-        return get_user_model().objects.none()
 
 
 class UserRegisterView(APIView):
@@ -94,7 +82,7 @@ class UserSetPasswordView(APIView):
 
         serializer.save()
 
-        user_serializer = UserProfileSerializer()
+        user_serializer = TerraUserSerializer()
         return Response(user_serializer.to_representation(serializer.user))
 
 
@@ -107,7 +95,7 @@ class UserChangePasswordView(APIView):
 
         serializer.save()
 
-        user_serializer = UserProfileSerializer()
+        user_serializer = TerraUserSerializer()
         return Response(user_serializer.to_representation(serializer.user))
 
 
@@ -135,7 +123,7 @@ class UserViewSet(ModelViewSet):
             self.permission_classes = [permissions.IsAuthenticated, UserAdminPermission]
         return super().get_permissions()
 
-    @action(detail=False, serializer_class=TerraUserSerializer)
+    @action(detail=False, serializer_class=TerraUserSerializer, methods=["get"])
     def profile(self, request, *args, **kwargs):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
