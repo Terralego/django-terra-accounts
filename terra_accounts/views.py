@@ -130,9 +130,10 @@ class UserViewSet(ModelViewSet):
     def get_permissions(self):
         """ Simple Auth to access profile, Admin perm to manage viewset """
         if self.action == "profile":
-            return [permissions.IsAuthenticated]
+            self.permission_classes = [permissions.IsAuthenticated]
         else:
-            return [UserAdminPermission]
+            self.permission_classes = [permissions.IsAuthenticated, UserAdminPermission]
+        return super().get_permissions()
 
     @action(detail=False, serializer_class=TerraUserSerializer)
     def profile(self, request, *args, **kwargs):
@@ -141,6 +142,6 @@ class UserViewSet(ModelViewSet):
 
 
 class GroupViewSet(ModelViewSet):
-    permission_classes = (GroupAdminPermission, )
+    permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
     serializer_class = GroupSerializer

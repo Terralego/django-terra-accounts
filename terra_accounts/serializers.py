@@ -87,11 +87,16 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class TerraUserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
+    modules = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, required=False)
     uuid = serializers.UUIDField(read_only=True)
 
     def get_permissions(self, obj):
-        return list(obj.get_all_terra_permissions())
+        return list(obj.get_all_terra_permissions_codename())
+
+    def get_modules(self, instance):
+        perms = instance.get_all_terra_permissions()
+        return list(set([name.split(':')[0] for name in perms.values_list('name', flat=True)]))
 
     def save(self):
         super().save()
@@ -104,7 +109,8 @@ class TerraUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('id', 'is_superuser', 'email', 'uuid', 'properties',
-                  'is_staff', 'is_active', 'permissions', 'groups', 'password')
+                  'is_staff', 'is_active', 'permissions', 'groups', 'password',
+                  'modules')
 
 
 class TerraStaffUserSerializer(TerraUserSerializer):

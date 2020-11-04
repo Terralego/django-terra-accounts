@@ -59,6 +59,10 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
                                      | Q(group__in=self.groups.all()))
         else:
             perms = TerraPermission.objects.none()
+        return perms
+
+    def get_all_terra_permissions_codename(self):
+        perms = self.get_all_terra_permissions()
         return perms.values_list('codename', flat=True)
 
     def has_terra_perm(self, codename):
