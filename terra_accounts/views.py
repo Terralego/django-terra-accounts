@@ -5,6 +5,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import permissions, status
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.parsers import JSONParser
@@ -135,6 +136,11 @@ class UserViewSet(ModelViewSet):
             if not user.is_superuser:
                 return TerraStaffUserSerializer if user.is_staff else TerraSimpleUserSerializer
         return TerraUserSerializer
+
+    @action(detail=False, serializer_class=TerraUserSerializer)
+    def profile(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
 
 
 class GroupViewSet(ModelViewSet):
