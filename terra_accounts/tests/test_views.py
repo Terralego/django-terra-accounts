@@ -7,10 +7,9 @@ class SettingsViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def test_view(self):
-        response = self.client.get(reverse('terra_accounts:settings'))
+    def test_settings_patched(self):
+        """ public settings provided by terra_settings endpoint should serve jwt_delta value patched in apps.ready """
+        response = self.client.get(reverse('settings'))
         self.assertEqual(200, response.status_code)
-        self.assertListEqual(
-            ['jwt_delta', 'language'],
-            list(response.json())
-        )
+        data = response.json()
+        self.assertIn('jwt_delta', data)

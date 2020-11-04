@@ -2,8 +2,14 @@
 CHANGELOG
 =========
 
-0.3.14.dev0     (XXXX-XX-XX)
+0.5.0           (2020-11-03)
 ----------------------------
+
+* Breaking changes
+  * terra-accounts settings endpoint is now removed in favor of terra-settings settings endpoint
+  * Used with django-terra-settings instead of django-terra-utils
+  * Please update your project requirements and code to use new terra-settings app.
+  * Remove deprecated user viewset / serializer / info endpoint
 
 
 0.3.13          (2020-09-08)

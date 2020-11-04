@@ -19,7 +19,7 @@ class RegistrationTestCase(TestCase):
     def test_registration_view(self):
         # Testing with good email
         response = self.client.post(
-            reverse('terra_accounts:register'),
+            reverse('register'),
             {
                 'email': 'toto@terra.com',
             })
@@ -34,7 +34,7 @@ class RegistrationTestCase(TestCase):
 
         # Testing duplicate email
         response = self.client.post(
-            reverse('terra_accounts:register'),
+            reverse('register'),
             {
                 'email': 'toto@terra.com',
             }
@@ -49,7 +49,7 @@ class RegistrationTestCase(TestCase):
 
         # Not same password
         response = self.client.post(
-            reverse('terra_accounts:reset-password', args=[uidb64, token]),
+            reverse('reset-password', args=[uidb64, token]),
             {
                 'new_password1': 'pass1',
                 'new_password2': 'pass1false',
@@ -62,7 +62,7 @@ class RegistrationTestCase(TestCase):
         test_user_properties = {'test': 'property'}
         self.assertFalse(user.check_password(new_password))
         response = self.client.post(
-            reverse('terra_accounts:reset-password', args=[uidb64, token]),
+            reverse('reset-password', args=[uidb64, token]),
             {
                 'new_password1': new_password,
                 'new_password2': new_password,
@@ -77,7 +77,7 @@ class RegistrationTestCase(TestCase):
 
     def test_invalid_email(self):
         response = self.client.post(
-            reverse('terra_accounts:register'),
+            reverse('register'),
             {
                 'email': 'toto@terra.',
             })
@@ -85,7 +85,7 @@ class RegistrationTestCase(TestCase):
 
         # Testing email is empty
         response = self.client.post(
-            reverse('terra_accounts:register'),
+            reverse('register'),
             {
                 'email': '',
             }
@@ -98,7 +98,7 @@ class RegistrationTestCase(TestCase):
 
         self.assertEqual(len(mail.outbox), 0)
         response = self.client.post(
-            reverse('terra_accounts:register'),
+            reverse('register'),
             {
                 'email': test_email,
             }

@@ -12,7 +12,7 @@ In your project :
         # required apps to work with terra_accounts
         'rest_framework',
         'rest_framework_jwt',
-        'terra_utils',
+        'terra_settings',
         # terra_accounts app
         'terra_accounts',
         ...
@@ -26,9 +26,9 @@ In your project :
     urlpatterns = [
         ...
         # required apps to work with terra_accounts
-        path('', include('terra_utils.urls', namespace='terra_utils')),
+        path('', include('terra_settings.urls')),
         # terra_accounts app
-        path('', include('terra_accounts.urls', namespace='terra_accounts')),
+        path('', include('terra_accounts.urls')),
         ...
     ]
 

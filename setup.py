@@ -21,6 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     url='https://github.com/Terralego/django-terra-accounts.git',
+    python_requires='>=3.6',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -30,10 +31,11 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Framework :: Django',
         'Framework :: Django :: 2.2',
         'Framework :: Django :: 3.0',
@@ -42,7 +44,7 @@ setup(
     install_requires=[
         'django>=2.2',
         'psycopg2',  # postgres is required to use JSONField
-        'django-terra-utils>=0.3.10',
+        'django-terra-settings>=0.1.2',
         "djangorestframework-jwt",
         'djangorestframework',
         "django-url-filter>=0.3",

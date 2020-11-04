@@ -12,13 +12,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_jwt.settings import api_settings as jwt_settings
-from terra_utils.filters import JSONFieldOrderingFilter
+from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission
-from .serializers import (DeprecatedTerraUserSerializer, GroupSerializer,
+from .serializers import (GroupSerializer,
                           PasswordChangeSerializer, PasswordResetSerializer,
                           TerraUserSerializer, UserProfileSerializer)
 
@@ -70,14 +69,6 @@ class UserRegisterView(APIView):
 
                 serializer = TerraUserSerializer(user)
 
-                if 'terracommon.events' in settings.INSTALLED_APPS:
-                    from terracommon.events.signals import event
-                    event.send(
-                        self.__class__,
-                        action="USER_CREATED",
-                        user=user,
-                        instance=user
-                    )
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data=form.errors,
@@ -121,12 +112,6 @@ class UserChangePasswordView(APIView):
         return Response(user_serializer.to_representation(serializer.user))
 
 
-class UserInformationsView(APIView):
-    def get(self, request):
-        user = self.request.user
-        return Response(DeprecatedTerraUserSerializer(user).data)
-
-
 class UserViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     parser_classes = (JSONParser, )
@@ -147,36 +132,7 @@ class UserViewSet(ModelViewSet):
         return self.queryset
 
 
-class DeprecatedUserViewSet(UserViewSet):
-    lookup_field = 'pk'
-    lookup_value_regex = '[0-9]+'
-    serializer_class = DeprecatedTerraUserSerializer
-
-    def dispatch(self, *args, **kwargs):
-        import warnings
-        warnings.warn(
-            "Looking up a user by `id` is deprecated, use `uuid` instead.",
-            DeprecationWarning
-        )
-        return super().dispatch(*args, **kwargs)
-
-
 class GroupViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-
-
-class SettingsView(APIView):
-    permission_classes = ()
-    authentication_classes = ()
-
-    def get(self, request):
-        terra_settings = {
-            'jwt_delta': jwt_settings.JWT_EXPIRATION_DELTA,
-            # for the moment, language is fixed and defined by backend instance
-            'language': settings.LANGUAGE_CODE.lower()
-        }
-
-        terra_settings.update(getattr(settings, 'TERRA_APPLIANCE_SETTINGS', {}))
-        return Response(terra_settings)
