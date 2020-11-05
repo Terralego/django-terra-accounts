@@ -63,14 +63,6 @@ class PasswordResetSerializer(PasswordChangeSerializer):
         return super().validate(attrs)
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = UserModel
-        fields = ('uuid', 'email', 'properties')
-        read_only_fields = ('uuid', UserModel.USERNAME_FIELD, )
-
-
 class GroupSerializer(serializers.ModelSerializer):
     users = serializers.PrimaryKeyRelatedField(
         many=True,
@@ -87,14 +79,19 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class TerraUserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
+    modules = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, required=False)
+    uuid = serializers.UUIDField(read_only=True)
 
     def get_permissions(self, obj):
-        return list(obj.get_all_terra_permissions())
+        return list(obj.get_all_terra_permissions_codename())
+
+    def get_modules(self, instance):
+        perms = instance.get_all_terra_permissions()
+        return list(set([name.split(':')[0] for name in perms.values_list('name', flat=True)]))
 
     def save(self):
         super().save()
-
         if 'password' in self.validated_data:
             self.instance.set_password(self.validated_data['password'])
             self.instance.save()
@@ -103,5 +100,16 @@ class TerraUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('is_superuser', 'email', 'uuid', 'properties',
-                  'is_staff', 'is_active', 'permissions', 'groups', 'password')
+        fields = ('id', 'is_superuser', 'email', 'uuid', 'properties',
+                  'is_staff', 'is_active', 'permissions', 'groups', 'password',
+                  'modules')
+
+
+class TerraStaffUserSerializer(TerraUserSerializer):
+    """ A staff user cannot edit is_superuser status """
+    is_superuser = serializers.BooleanField(read_only=True)
+
+
+class TerraSimpleUserSerializer(TerraStaffUserSerializer):
+    """ A simple user cannot edit is_staff and is_superuser status """
+    is_staff = serializers.BooleanField(read_only=True)

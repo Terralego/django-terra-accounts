@@ -1,18 +1,15 @@
-from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
 
 from .factories import TerraUserFactory
 
 
-class RegistrationTestCase(TestCase):
+class RegistrationTestCase(APITestCase):
     def setUp(self):
         self.user = TerraUserFactory()
-        self.client = APIClient()
 
     def test_user_profile(self):
-        """Tests all operations on user profile
-        """
+        """ Tests all operations on user profile """
 
         # unauthenticated user must be stopped
         response = self.client.get(reverse('profile'))
@@ -24,26 +21,3 @@ class RegistrationTestCase(TestCase):
         response = self.client.get(reverse('profile'))
         self.assertEqual(200, response.status_code)
         self.assertEqual(str(self.user.uuid), response.json()['uuid'])
-
-        # and try to update the profile
-        properties = {
-            'firstname': 'John',
-            'lastname': 'Malkovitch'
-        }
-
-        self.client.patch(reverse('profile'), {
-            'properties': properties
-        }, format='json')
-
-        self.user.refresh_from_db()
-        self.assertDictEqual(properties, self.user.properties)
-
-        # changing e-mail is forbidden
-        response = self.client.patch(reverse('profile'), {
-            'email': 'john@lennon.com'
-        }, format='json')
-
-        old_email = self.user.email
-        self.user.refresh_from_db()
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(old_email, self.user.email)

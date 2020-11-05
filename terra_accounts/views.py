@@ -5,55 +5,39 @@ from django.contrib.auth.tokens import default_token_generator
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import permissions, status
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
+from . import serializers
 from .forms import PasswordSetAndResetForm
-from .permissions import GroupAdminPermission
-from .serializers import (GroupSerializer,
-                          PasswordChangeSerializer, PasswordResetSerializer,
-                          TerraUserSerializer, UserProfileSerializer)
+from .permissions import GroupAdminPermission, UserAdminPermission
 
 UserModel = get_user_model()
 
 
-class UserProfileView(RetrieveUpdateAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self):
-        return self.request.user
-
-    def get_queryset(self):
-        return get_user_model().objects.none()
-
-
 class UserRegisterView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request):
         form = PasswordSetAndResetForm(data=request.data)
+        opts = {
+            'token_generator': default_token_generator,
+            'from_email': settings.DEFAULT_FROM_EMAIL,
+            'email_template_name':
+                'registration/registration_email.txt',
+            'subject_template_name':
+                'registration/registration_email_subject.txt',
+            'request': self.request,
+            'html_email_template_name':
+                'registration/registration_email.html',
+        }
         try:
             if form.is_valid():
-                opts = {
-                    'token_generator': default_token_generator,
-                    'from_email': settings.DEFAULT_FROM_EMAIL,
-                    'email_template_name':
-                        'registration/registration_email.txt',
-                    'subject_template_name':
-                        'registration/registration_email_subject.txt',
-                    'request': self.request,
-                    'html_email_template_name':
-                        'registration/registration_email.html',
-                }
-
                 with transaction.atomic():
                     user = get_user_model().objects.create(
                         **{
@@ -67,7 +51,7 @@ class UserRegisterView(APIView):
 
                 form.save(**opts)
 
-                serializer = TerraUserSerializer(user)
+                serializer = serializers.TerraUserSerializer(user)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
@@ -87,52 +71,62 @@ class UserRegisterView(APIView):
 
 
 class UserSetPasswordView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request, uidb64, token):
-        serializer = PasswordResetSerializer(uidb64, token, data=request.data)
+        serializer = serializers.PasswordResetSerializer(uidb64, token, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
 
-        user_serializer = UserProfileSerializer()
+        user_serializer = serializers.TerraUserSerializer()
         return Response(user_serializer.to_representation(serializer.user))
 
 
 class UserChangePasswordView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request):
-        serializer = PasswordChangeSerializer(request.user, data=request.data)
+        serializer = serializers.PasswordChangeSerializer(request.user, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
 
-        user_serializer = UserProfileSerializer()
+        user_serializer = serializers.TerraUserSerializer()
         return Response(user_serializer.to_representation(serializer.user))
 
 
 class UserViewSet(ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
-    parser_classes = (JSONParser, )
-    serializer_class = TerraUserSerializer
-    queryset = UserModel.objects.none()
+    queryset = UserModel.objects.all()
     filter_backends = (DjangoFilterBackend, JSONFieldOrderingFilter,
                        SearchFilter, )
     search_fields = ('uuid', 'email', 'properties', )
     filter_fields = ('uuid', 'email', 'properties', 'groups', 'is_superuser',
                      'is_active', 'is_staff', 'date_joined')
-    lookup_field = 'uuid'
-    lookup_value_regex = '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
 
-    def get_queryset(self):
-        if self.request.user.has_perm('terra_accounts.can_manage_users'):
-            return UserModel.objects.all()
+    def get_serializer_class(self):
+        """ in write endpoints, use customs serializers to avoid privilege escalation """
+        if self.request.method not in permissions.SAFE_METHODS:
+            user = self.request.user
+            if not user.is_superuser:
+                return serializers.TerraStaffUserSerializer if user.is_staff else serializers.TerraSimpleUserSerializer
+        return serializers.TerraUserSerializer
 
-        return self.queryset
+    def get_permissions(self):
+        """ Simple Auth to access profile, Admin perm to manage viewset """
+        if self.action == "profile":
+            self.permission_classes = [permissions.IsAuthenticated]
+        else:
+            self.permission_classes = [permissions.IsAuthenticated, UserAdminPermission]
+        return super().get_permissions()
+
+    @action(detail=False, serializer_class=serializers.TerraUserSerializer, methods=["get"])
+    def profile(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
 
 
 class GroupViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = serializers.GroupSerializer
