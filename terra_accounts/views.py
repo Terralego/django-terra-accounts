@@ -13,12 +13,9 @@ from rest_framework.viewsets import ModelViewSet
 from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
+from . import serializers
 from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission, UserAdminPermission
-from .serializers import (GroupSerializer,
-                          PasswordChangeSerializer, PasswordResetSerializer,
-                          TerraUserSerializer, TerraStaffUserSerializer,
-                          TerraSimpleUserSerializer)
 
 UserModel = get_user_model()
 
@@ -54,7 +51,7 @@ class UserRegisterView(APIView):
 
                 form.save(**opts)
 
-                serializer = TerraUserSerializer(user)
+                serializer = serializers.TerraUserSerializer(user)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
@@ -77,12 +74,12 @@ class UserSetPasswordView(APIView):
     permission_classes = (permissions.AllowAny, )
 
     def post(self, request, uidb64, token):
-        serializer = PasswordResetSerializer(uidb64, token, data=request.data)
+        serializer = serializers.PasswordResetSerializer(uidb64, token, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
 
-        user_serializer = TerraUserSerializer()
+        user_serializer = serializers.TerraUserSerializer()
         return Response(user_serializer.to_representation(serializer.user))
 
 
@@ -90,12 +87,12 @@ class UserChangePasswordView(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request):
-        serializer = PasswordChangeSerializer(request.user, data=request.data)
+        serializer = serializers.PasswordChangeSerializer(request.user, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
 
-        user_serializer = TerraUserSerializer()
+        user_serializer = serializers.TerraUserSerializer()
         return Response(user_serializer.to_representation(serializer.user))
 
 
@@ -112,8 +109,8 @@ class UserViewSet(ModelViewSet):
         if self.request.method not in permissions.SAFE_METHODS:
             user = self.request.user
             if not user.is_superuser:
-                return TerraStaffUserSerializer if user.is_staff else TerraSimpleUserSerializer
-        return TerraUserSerializer
+                return serializers.TerraStaffUserSerializer if user.is_staff else serializers.TerraSimpleUserSerializer
+        return serializers.TerraUserSerializer
 
     def get_permissions(self):
         """ Simple Auth to access profile, Admin perm to manage viewset """
@@ -123,7 +120,7 @@ class UserViewSet(ModelViewSet):
             self.permission_classes = [permissions.IsAuthenticated, UserAdminPermission]
         return super().get_permissions()
 
-    @action(detail=False, serializer_class=TerraUserSerializer, methods=["get"])
+    @action(detail=False, serializer_class=serializers.TerraUserSerializer, methods=["get"])
     def profile(self, request, *args, **kwargs):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
@@ -132,4 +129,4 @@ class UserViewSet(ModelViewSet):
 class GroupViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = serializers.GroupSerializer
