@@ -5,6 +5,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetConfirmView
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
+from terra_accounts.models import TerraPermission
 
 UserModel = get_user_model()
 
@@ -113,3 +114,9 @@ class TerraStaffUserSerializer(TerraUserSerializer):
 class TerraSimpleUserSerializer(TerraStaffUserSerializer):
     """ A simple user cannot edit is_staff and is_superuser status """
     is_staff = serializers.BooleanField(read_only=True)
+
+
+class TerraPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TerraPermission
+        fields = "__all__"

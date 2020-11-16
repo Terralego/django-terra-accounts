@@ -5,14 +5,13 @@ from rest_framework import routers
 from rest_framework.reverse import reverse_lazy
 from rest_framework_jwt import views as auth_views
 
-from .views import (GroupViewSet,
-                    UserChangePasswordView,
-                    UserRegisterView, UserSetPasswordView,
-                    UserViewSet)
+from . import views
 
 router = routers.SimpleRouter()
-router.register(r'user', UserViewSet, basename='user')
-router.register(r'groups', GroupViewSet, basename='group')
+router.register(r'user', views.UserViewSet, basename='user')
+router.register(r'groups', views.GroupViewSet, basename='group')
+router.register(r'permissions', views.TerraPermissionViewSet, basename='permission')
+
 
 urlpatterns = [
     # jwt process
@@ -31,10 +30,10 @@ urlpatterns = [
     path('auth/reset/done/', base_auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     # account management
-    path('accounts/user/', UserViewSet.as_view({"get": "profile"}), name='profile'),  # deprecated, use user/profile
-    path('accounts/register/', UserRegisterView.as_view(), name='register'),
+    path('accounts/user/', views.UserViewSet.as_view({"get": "profile"}), name='profile'),
+    path('accounts/register/', views.UserRegisterView.as_view(), name='register'),
     path('accounts/change-password/reset/<slug:uidb64>/<slug:token>/',
-         UserSetPasswordView.as_view(), name='reset-password'),
-    path('accounts/change-password/reset/', UserChangePasswordView.as_view(), name='new-password'),
+         views.UserSetPasswordView.as_view(), name='reset-password'),
+    path('accounts/change-password/reset/', views.UserChangePasswordView.as_view(), name='new-password'),
     path('', include(router.urls))
 ]

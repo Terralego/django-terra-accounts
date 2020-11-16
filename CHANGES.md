@@ -4,6 +4,8 @@ CHANGELOG
 0.5.1.dev0      (XXXX-XX-XX)
 ----------------------------
 
+* Endpoint to get all / user available functional permissions
+
 
 0.5.0           (2020-11-03)
 ----------------------------
