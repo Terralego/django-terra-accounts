@@ -4,12 +4,12 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
 from django.db import transaction
 from django.db.utils import IntegrityError
-from rest_framework import permissions, status
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from terra_accounts.models import TerraPermission
 from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
@@ -96,7 +96,7 @@ class UserChangePasswordView(APIView):
         return Response(user_serializer.to_representation(serializer.user))
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = UserModel.objects.all()
     filter_backends = (DjangoFilterBackend, JSONFieldOrderingFilter,
                        SearchFilter, )
@@ -126,7 +126,20 @@ class UserViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-class GroupViewSet(ModelViewSet):
+class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GroupAdminPermission, )
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
+
+
+class TerraPermissionViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    queryset = TerraPermission.objects.all()
+    serializer_class = serializers.TerraPermissionSerializer
+
+    @action(detail=False, serializer_class=serializers.TerraPermissionSerializer, methods=["get"])
+    def available(self, request, *args, **kwargs):
+        """ List only logged user permission """
+        perms = request.user.get_all_terra_permissions()
+        serializer = self.get_serializer(perms, many=True)
+        return Response(serializer.data)

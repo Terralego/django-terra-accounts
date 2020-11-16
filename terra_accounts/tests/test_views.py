@@ -27,3 +27,45 @@ class UserViewsetTestCase(APITestCase):
         data = response.json()
         # module User should appear in modules list
         self.assertListEqual(data['modules'], ['User'])
+
+
+class TerraPermissionViewsetTestCase(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.superuser = TerraUserFactory(is_staff=True, is_superuser=True)
+        cls.simple_user = TerraUserFactory()
+
+    def setUp(self) -> None:
+        self.client.force_authenticate(self.superuser)
+
+    def test_list_superuser(self):
+        self.client.force_authenticate(self.superuser)
+        response = self.client.get(reverse('permission-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        # module User should appear in modules list
+        self.assertTrue(len(data) > 1)
+
+    def test_available_superuser(self):
+        self.client.force_authenticate(self.superuser)
+        response = self.client.get(reverse('permission-available'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        # module User should appear in modules list
+        self.assertTrue(len(data) > 1)
+
+    def test_list_simpleuser(self):
+        self.client.force_authenticate(self.simple_user)
+        response = self.client.get(reverse('permission-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        # module User should appear in modules list
+        self.assertTrue(len(data) > 1)
+
+    def test_available_simpleuser(self):
+        self.client.force_authenticate(self.simple_user)
+        response = self.client.get(reverse('permission-available'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        # module User should appear in modules list
+        self.assertTrue(len(data) == 0)
