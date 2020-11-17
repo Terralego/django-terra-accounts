@@ -26,7 +26,7 @@ class UserViewsetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
         # module User should appear in modules list
-        self.assertListEqual(data['modules'], ['User'])
+        self.assertListEqual(sorted(data['modules']), sorted(['User', 'UserGroup']))
 
 
 class TerraPermissionViewsetTestCase(APITestCase):
