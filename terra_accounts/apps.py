@@ -10,8 +10,8 @@ class AccountsConfig(PermissionRegistrationMixin, AppConfig):
     verbose_name = 'Terra Accounts'
 
     permissions = (
-        ('can_manage_users', 'User: Is able to create, delete, update users'),
-        ('can_manage_groups', 'User: Is able to create, delete, update groups'),
+        ('User', 'can_manage_users', 'Is able to create, delete, update users'),
+        ('UserGroup', 'can_manage_groups', 'Is able to create, delete, update groups'),
     )
 
     def ready(self):

@@ -1,8 +1,12 @@
 CHANGELOG
 =========
 
-0.5.2.dev0      (XXXX-XX-XX)
+1.0.0.dev0      (XXXX-XX-XX)
 ----------------------------
+
+* !! WARNING : Breaking changes !!
+
+* Change and fix way to get user terra modules
 
 
 0.5.1           (2020-11-16)

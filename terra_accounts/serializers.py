@@ -89,7 +89,7 @@ class TerraUserSerializer(serializers.ModelSerializer):
 
     def get_modules(self, instance):
         perms = instance.get_all_terra_permissions()
-        return list(set([name.split(':')[0] for name in perms.values_list('name', flat=True)]))
+        return list(set(perms.values_list('module', flat=True)))
 
     def save(self):
         super().save()

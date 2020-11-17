@@ -10,7 +10,7 @@ def permission_callback(sender, **kwargs):
     ContentType = sender.apps.get_model('contenttypes.ContentType')
     TerraPermission = sender.apps.get_model('terra_accounts.TerraPermission')
 
-    for perm, name in sender.permissions:
+    for module, perm, name in sender.permissions:
 
         ctype = ContentType.objects.get_for_model(TerraPermission)
 
@@ -19,5 +19,6 @@ def permission_callback(sender, **kwargs):
             codename=perm,
             defaults={
                 'name': name,
+                'module': module
             }
         )
