@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-1.0.0.dev0      (XXXX-XX-XX)
+1.0.0           (2020-11-18)
 ----------------------------
 
 * !! WARNING : Breaking changes !!
