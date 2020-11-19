@@ -10,10 +10,10 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from terra_accounts.models import TerraPermission
-from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from . import serializers
+from .filters import JSONFieldOrderingFilter
 from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission, UserAdminPermission
 
