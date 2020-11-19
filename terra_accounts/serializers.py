@@ -122,5 +122,3 @@ class TerraStaffUserSerializer(TerraUserSerializer):
 class TerraSimpleUserSerializer(TerraStaffUserSerializer):
     """ A simple user cannot edit is_staff and is_superuser status """
     is_staff = serializers.BooleanField(read_only=True)
-
-
