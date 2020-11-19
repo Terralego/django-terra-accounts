@@ -50,7 +50,8 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
     def get_by_natural_key(self, username):
         return self.get(**{f'{self.model.USERNAME_FIELD}__iexact': username})
 
-    def get_all_terra_permissions(self):
+    @property
+    def terra_permissions(self):
         if self.is_active:
             perms = TerraPermission.objects.all()
 
@@ -61,8 +62,9 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
             perms = TerraPermission.objects.none()
         return perms
 
-    def get_all_terra_permissions_codename(self):
-        perms = self.get_all_terra_permissions()
+    @property
+    def terra_permissions_codenames(self):
+        perms = self.terra_permissions
         return perms.values_list('codename', flat=True)
 
     def has_terra_perm(self, codename):
