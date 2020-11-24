@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.settings import api_settings
 from rest_framework.test import APIRequestFactory, APITestCase
 
+from terra_accounts.filters import JSONFieldOrderingFilter
 from terra_accounts.models import TerraUser
 from terra_accounts.serializers import TerraUserSerializer
 
