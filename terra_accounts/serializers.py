@@ -64,6 +64,12 @@ class PasswordResetSerializer(PasswordChangeSerializer):
         return super().validate(attrs)
 
 
+class TerraPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TerraPermission
+        fields = "__all__"
+
+
 class GroupSerializer(serializers.ModelSerializer):
     users = serializers.PrimaryKeyRelatedField(
         many=True,
@@ -72,23 +78,25 @@ class GroupSerializer(serializers.ModelSerializer):
         required=False,
     )
 
+    permissions = TerraPermissionSerializer(many=True, required=False)
+
     class Meta:
         model = Group
         ref_name = 'TerraGroupSerializer'
-        fields = ('id', 'name', 'users')
+        fields = ('id', 'name', 'users', 'permissions')
 
 
 class TerraUserSerializer(serializers.ModelSerializer):
-    permissions = serializers.SerializerMethodField()
+    permissions = serializers.SlugRelatedField('codename',
+                                               queryset=TerraPermission.objects.all(),
+                                               source='terra_permissions',
+                                               many=True)
     modules = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, required=False)
     uuid = serializers.UUIDField(read_only=True)
 
-    def get_permissions(self, obj):
-        return list(obj.get_all_terra_permissions_codename())
-
     def get_modules(self, instance):
-        perms = instance.get_all_terra_permissions()
+        perms = instance.terra_permissions
         return list(set(perms.values_list('module', flat=True)))
 
     def save(self):
@@ -114,9 +122,3 @@ class TerraStaffUserSerializer(TerraUserSerializer):
 class TerraSimpleUserSerializer(TerraStaffUserSerializer):
     """ A simple user cannot edit is_staff and is_superuser status """
     is_staff = serializers.BooleanField(read_only=True)
-
-
-class TerraPermissionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TerraPermission
-        fields = "__all__"

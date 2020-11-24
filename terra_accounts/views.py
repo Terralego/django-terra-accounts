@@ -10,10 +10,10 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from terra_accounts.models import TerraPermission
-from terra_settings.filters import JSONFieldOrderingFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from . import serializers
+from .filters import JSONFieldOrderingFilter
 from .forms import PasswordSetAndResetForm
 from .permissions import GroupAdminPermission, UserAdminPermission
 
@@ -140,6 +140,6 @@ class TerraPermissionViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, serializer_class=serializers.TerraPermissionSerializer, methods=["get"])
     def available(self, request, *args, **kwargs):
         """ List only logged user permission """
-        perms = request.user.get_all_terra_permissions()
+        perms = request.user.terra_permissions
         serializer = self.get_serializer(perms, many=True)
         return Response(serializer.data)

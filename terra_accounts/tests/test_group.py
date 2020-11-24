@@ -115,7 +115,7 @@ class UserViewsetTestCase(APITestCase):
             reverse('group-detail', args=[self.group.pk]),
             data,
         )
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code, response.json())
         # We must still have only 1 group in the DB
         self.assertEqual(1, Group.objects.count())
         # but with the new name
