@@ -90,6 +90,7 @@ class TerraUserSerializer(serializers.ModelSerializer):
     permissions = serializers.SlugRelatedField('codename',
                                                queryset=TerraPermission.objects.all(),
                                                source='terra_permissions',
+                                               required=False,
                                                many=True)
     modules = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, required=False)
