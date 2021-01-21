@@ -78,12 +78,17 @@ class GroupSerializer(serializers.ModelSerializer):
         required=False,
     )
 
-    permissions = TerraPermissionSerializer(many=True, required=False)
+    permission_list = TerraPermissionSerializer(many=True, read_only=True)
+    permissions = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=TerraPermission.objects.all(),
+        required=False,
+    )
 
     class Meta:
         model = Group
-        ref_name = 'TerraGroupSerializer'
-        fields = ('id', 'name', 'users', 'permissions')
+        ref_name = "TerraGroupSerializer"
+        fields = ("id", "name", "users", "permissions", "permission_list")
 
 
 class TerraUserSerializer(serializers.ModelSerializer):
