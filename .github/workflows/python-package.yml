@@ -25,9 +25,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install flake8
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install --upgrade pip flake8
     - name: Lint with flake8
       run: |
         flake8 terra_accounts
@@ -38,18 +36,15 @@ jobs:
     continue-on-error: ${{matrix.experimental}}
     strategy:
       matrix:
-        python-version: ['3.6', '3.8']
+        python-version: ['3.6', '3.9']
         django-version: [2.2.*, 3.1.*]
         experimental: [false]
         include:
-          - python-version: 3.9
-            django-version: 3.1.*
-            experimental: true
           - python-version: 3.6
-            django-version: 3.2.*
+            django-version: 3.2*
             experimental: true
           - python-version: 3.9
-            django-version: 3.2.*
+            django-version: 3.2*
             experimental: true
           - python-version: 3.6
             django-version: dev
@@ -74,8 +69,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        sudo apt update && sudo apt-get -yq install libproj-dev binutils gdal-bin libgdal-dev
-        python -m pip install --upgrade pip setuptools wheel
+        pip install --upgrade pip setuptools wheel
         pip install .[dev] -U
         if [[ ${{ matrix.django-version }} == dev ]]; then
           pip install -e git+https://github.com/django/django@master#egg=django;
