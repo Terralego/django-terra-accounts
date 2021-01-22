@@ -41,10 +41,10 @@ jobs:
         experimental: [false]
         include:
           - python-version: 3.6
-            django-version: 3.2*
+            django-version: 3.2a1
             experimental: true
           - python-version: 3.9
-            django-version: 3.2*
+            django-version: 3.2a1
             experimental: true
           - python-version: 3.6
             django-version: dev
