@@ -1,8 +1,10 @@
 CHANGELOG
 =========
 
-1.0.2.dev0      (XXXX-XX-XX)
+1.0.2      (2021-01-20)
 ----------------------------
+
+* Permissions are not required anymore by serializer for TerraUser
 
 
 1.0.1           (2020-11-24)
