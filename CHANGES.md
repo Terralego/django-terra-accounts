@@ -5,6 +5,7 @@ CHANGELOG
 ----------------------------
 
 * Permissions are not required anymore by serializer for TerraUser
+* Group permissions are set in `permission_list` field by serializer for reading operations and `permission` for writing operations
 
 
 1.0.1           (2020-11-24)
