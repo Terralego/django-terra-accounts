@@ -37,15 +37,9 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.6', '3.9']
-        django-version: [2.2.*, 3.1.*]
+        django-version: [2.2.*, 3.2a1]  # use preversion for django 3.2. fix with 3.2.* after first release.
         experimental: [false]
         include:
-          - python-version: 3.6
-            django-version: 3.2a1
-            experimental: true
-          - python-version: 3.9
-            django-version: 3.2a1
-            experimental: true
           - python-version: 3.6
             django-version: dev
             experimental: true
