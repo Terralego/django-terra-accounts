@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-1.0.3.dev0      (XXXX-XX-XX)
+1.0.3           (2020-02-16)
 ----------------------------
 
-* Try to use translated permission labels
+* Translate permission labels
 
 
 1.0.2      (2021-01-20)
