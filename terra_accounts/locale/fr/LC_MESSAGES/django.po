@@ -1,0 +1,79 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-15 16:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Important dates"
+msgstr "Dates importantes"
+
+msgid "Is able to create, delete, update users"
+msgstr "Peut créer / supprimer / modifier des utilisateurs"
+
+msgid "Is able to create, delete, update groups"
+msgstr "Peut créer / supprimer / mettre à jour les groupes"
+
+msgid "unique identifier"
+msgstr "Identifiant unique"
+
+msgid "email address"
+msgstr "Adresse email"
+
+msgid "staff status"
+msgstr "Status is_staff"
+
+msgid "Designates whether the user can log into this admin site."
+msgstr "Décrit si l'ustilisateur peut se connecter au site d'admin"
+
+msgid "active"
+msgstr "actif"
+
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
+msgstr ""
+"Décrit si l'utilisateur est actif. Déselectionner au lieu de supprimer "
+"l'utilisateur."
+
+msgid "date joined"
+msgstr "date de premier accès."
+
+#, python-format
+msgid ""
+"You're receiving this email because you requested a new account at "
+"%(site_name)s."
+msgstr ""
+"Vous recevez cet email car vous avez demandé un nouveau compte sur "
+"%(site_name)s."
+
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+"Rendez-vous sur la page suivante et choisissez un nouveau mot de passe :"
+
+msgid "Thanks for using our site!"
+msgstr "Merci d'utiliser notre site !"
+
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "L'équipe %(site_name)s"
+
+#, python-format
+msgid "Registration on %(site_name)s"
+msgstr "ENregistrement sur %(site_name)s"

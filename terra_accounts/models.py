@@ -90,6 +90,10 @@ class TerraPermission(Permission):
     original = models.OneToOneField(Permission, on_delete=models.CASCADE, parent_link=True)
     module = models.CharField(blank=True, max_length=50)
 
+    @property
+    def name_translated(self):
+        return _(self.name)
+
     def __str__(self):
         return f"{self.module}: {self.original.name} ({self.codename})"
 

@@ -65,6 +65,8 @@ class PasswordResetSerializer(PasswordChangeSerializer):
 
 
 class TerraPermissionSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='name_translated')
+
     class Meta:
         model = TerraPermission
         fields = "__all__"

@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+1.0.3.dev0      (XXXX-XX-XX)
+----------------------------
+
+* Try to use translated permission labels
+
+
 1.0.2      (2021-01-20)
 ----------------------------
 

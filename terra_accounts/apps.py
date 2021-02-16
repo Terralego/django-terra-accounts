@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 from terra_settings.settings import TERRA_APPLIANCE_SETTINGS
 from rest_framework_jwt.settings import api_settings
 
@@ -10,8 +11,8 @@ class AccountsConfig(PermissionRegistrationMixin, AppConfig):
     verbose_name = 'Terra Accounts'
 
     permissions = (
-        ('User', 'can_manage_users', 'Is able to create, delete, update users'),
-        ('UserGroup', 'can_manage_groups', 'Is able to create, delete, update groups'),
+        ('User', 'can_manage_users', _('Is able to create, delete, update users')),
+        ('UserGroup', 'can_manage_groups', _('Is able to create, delete, update groups')),
     )
 
     def ready(self):
