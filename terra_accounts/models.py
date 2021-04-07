@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Permission, _user_has_perm
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+
 try:
     from django.db.models import JSONField
 except ImportError:  # TODO Remove when dropping Django releases < 3.1
@@ -15,7 +16,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .managers import ReadModelManager, TerraUserManager
+from .managers import ReadModelManager, TerraUserManager, TerraPermissionManager
 
 
 class TerraUser(AbstractBaseUser, PermissionsMixin):
@@ -85,10 +86,11 @@ class TerraUser(AbstractBaseUser, PermissionsMixin):
 
 UserModel = get_user_model()
 
-
 class TerraPermission(Permission):
     original = models.OneToOneField(Permission, on_delete=models.CASCADE, parent_link=True)
     module = models.CharField(blank=True, max_length=50)
+
+    objects = TerraPermissionManager()
 
     @property
     def name_translated(self):
@@ -96,7 +98,6 @@ class TerraPermission(Permission):
 
     def __str__(self):
         return f"{self.module}: {self.original.name} ({self.codename})"
-
 
 class ReadModel(models.Model):
     user = models.ForeignKey(UserModel, on_delete=models.PROTECT)
