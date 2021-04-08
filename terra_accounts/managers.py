@@ -1,7 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Manager, ObjectDoesNotExist
-from terra_settings.settings import TERRA_APPLIANCE_SETTINGS
+from django.conf import settings
 
 
 class TerraUserManager(BaseUserManager):
@@ -51,5 +51,5 @@ class ReadModelManager(Manager):
 
 class TerraPermissionManager(Manager):
     def get_queryset(self):
-        disabled_modules = TERRA_APPLIANCE_SETTINGS.get('disabled_modules', [])
+        disabled_modules = settings.TERRA_APPLIANCE_SETTINGS.get('disabled_modules', [])
         return super().get_queryset().exclude(module__in=disabled_modules)
