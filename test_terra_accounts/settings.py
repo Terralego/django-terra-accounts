@@ -146,3 +146,7 @@ JWT_AUTH = {
     'JWT_PAYLOAD_HANDLER': 'terra_accounts.jwt_payload.terra_payload_handler',
     'JWT_EXPIRATION_DELTA': timedelta(seconds=9999)
 }
+
+TERRA_APPLIANCE_SETTINGS = {
+    'disabled_modules': [],
+}
