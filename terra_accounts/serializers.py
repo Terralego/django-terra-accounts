@@ -94,10 +94,11 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class TerraUserSerializer(serializers.ModelSerializer):
+    # Read-only for now since we don't have code to handle modifications
     permissions = serializers.SlugRelatedField('codename',
-                                               queryset=TerraPermission.objects.all(),
                                                source='terra_permissions',
                                                required=False,
+                                               read_only=True,
                                                many=True)
     modules = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True, required=False)
