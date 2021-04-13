@@ -1,9 +1,8 @@
-CHANGELOG
-=========
-
-1.0.4.dev0      (XXXX-XX-XX)
+1.0.4      (2021-04-13)
 ----------------------------
 
+* Fix bug when pushing terra_permisisions from client
+* Filter module permission
 
 
 1.0.3           (2020-02-16)
