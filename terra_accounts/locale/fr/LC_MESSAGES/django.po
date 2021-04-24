@@ -28,7 +28,7 @@ msgid "Is able to create, delete, update users"
 msgstr "Peut créer / supprimer / modifier des utilisateurs"
 
 msgid "Is able to create, delete, update groups"
-msgstr "Peut créer / supprimer / mettre à jour les groupes"
+msgstr "Peut créer / supprimer / mettre à jour les groupes d'utilisateur"
 
 msgid "unique identifier"
 msgstr "Identifiant unique"
@@ -76,4 +76,4 @@ msgstr "L'équipe %(site_name)s"
 
 #, python-format
 msgid "Registration on %(site_name)s"
-msgstr "ENregistrement sur %(site_name)s"
+msgstr "Enregistrement sur %(site_name)s"
