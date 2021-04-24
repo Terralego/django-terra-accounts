@@ -12,7 +12,8 @@ def permission_callback(sender, **kwargs):
     TerraPermission = sender.apps.get_model("terra_accounts.TerraPermission")
 
     for module, perm, name in sender.permissions:
-        if module in settings.TERRA_APPLIANCE_SETTINGS["disabled_modules"]:
+
+        if module in settings.TERRA_APPLIANCE_SETTINGS.get("disabled_modules", []):
             continue
 
         ctype = ContentType.objects.get_for_model(TerraPermission)
