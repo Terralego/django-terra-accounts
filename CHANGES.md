@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-1.0.6+dev0     (XXXX-XX-XX)
+1.0.7          (2021-05-07)
 ---------------------------
 
 * Fix missing migration (and check migrations in CI)
