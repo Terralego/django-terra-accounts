@@ -39,24 +39,8 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.6', '3.9']
-        django-version: [2.2.*, 3.1.*]
-        experimental: [false]
-        include:
-          - python-version: 3.9
-            django-version: 3.1.*
-            experimental: true
-          - python-version: 3.6
-            django-version: 3.2a1
-            experimental: true
-          - python-version: 3.9
-            django-version: 3.2a1
-            experimental: true
-          - python-version: 3.8
-            django-version: dev
-            experimental: true
-          - python-version: 3.9
-            django-version: dev
-            experimental: true
+        django-version: [2.2.*, 3.2.*]
+
     services:
       postgres:
         image: postgis/postgis:10-2.5
