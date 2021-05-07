@@ -65,6 +65,9 @@ jobs:
         else
           pip install Django==${{ matrix.django-version }} -U;
         fi
+    - name: Check migrations
+      run: |
+        python3 ./manage.py makemigrations --check
     - name: Test with coverage
       run: |
         coverage run ./manage.py test
