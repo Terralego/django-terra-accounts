@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 
-1.0.5+dev0      (XXXX-XX-X)
+1.0.6          (2021-05-07)
 ---------------------------
 
   * Fix case where disabled_module is not defined in settings
