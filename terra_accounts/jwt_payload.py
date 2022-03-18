@@ -1,4 +1,4 @@
-from rest_framework_jwt.utils import jwt_payload_handler
+from rest_framework_jwt.utils import jwt_create_payload
 
 from .serializers import TerraUserSerializer
 
@@ -9,7 +9,7 @@ def terra_payload_handler(user):
     This function controlls the custom payload after login or token refresh.
     This data is returned through the web API.
     """
-    payload = jwt_payload_handler(user)
+    payload = jwt_create_payload(user)
 
     user_serializer = TerraUserSerializer(user)
     payload.update({

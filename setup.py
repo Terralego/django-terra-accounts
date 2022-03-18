@@ -45,7 +45,7 @@ setup(
         'django>=2.2',
         'psycopg2',  # postgres is required to use JSONField
         'django-terra-settings>=0.1.2',
-        "djangorestframework-jwt",
+        'drf-jwt',
         'djangorestframework',
         "django-url-filter>=0.3",
     ],
