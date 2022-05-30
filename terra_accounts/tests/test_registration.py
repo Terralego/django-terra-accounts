@@ -71,7 +71,7 @@ class RegistrationTestCase(TestCase):
         )
 
         user.refresh_from_db()
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code, response.json())
         self.assertTrue(user.check_password(new_password))
         self.assertDictEqual(user.properties, test_user_properties)
 

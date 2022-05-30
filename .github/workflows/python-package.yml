@@ -35,22 +35,16 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     needs: [lint]
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        python-version: ['3.6', '3.9']
-        django-version: ['2.2.*', '3.2.*']
-        experimental: [false]
-        include:
-          - django-version: '3.2.*'
-            python-version: '3.10'
-            experimental: true
-          - django-version: 'dev'
-            python-version: '3.8'
-            experimental: true
-          - django-version: 'dev'
-            python-version: '3.10'
-            experimental: true
+        python-version: ['3.6', '3.8', '3.10']
+        django-version: ['2.2.*', '3.2.*', '4.0']
+        exclude:
+          - python-version: '3.6'
+            django-version: '4.0'
+          - python-version: '3.10'
+            django-version: '2.2.*'
+
 
     services:
       postgres:
