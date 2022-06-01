@@ -4,6 +4,9 @@ CHANGELOG
 1.0.7+dev0     (XXXX-XX-XX)
 ---------------------------
 
+* Breaking Change: Replace djangorestframework-jwt (deprecated) with drf-jwt
+* JWT header prefix is now `Bearer` by default, override 'JWT_AUTH_HEADER_PREFIX' in 'JWT_AUTH' settings to set to JWT
+
 
 1.0.7          (2021-05-07)
 ---------------------------
