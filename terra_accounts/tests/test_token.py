@@ -19,7 +19,7 @@ class AuthenticationTestCase(APITestCase):
                                     {'email': self.user.email,
                                      'password': self.USER_PASSWORD},)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertIn('token', response.data)
 
         token = response.data.get('token', False)
@@ -27,7 +27,7 @@ class AuthenticationTestCase(APITestCase):
         response = self.client.post(reverse('token-verify'),
                                     {'token': token, },)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(token, response.data.get('token'))
 
     def test_fail_authentication(self):
